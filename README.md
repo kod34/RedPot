@@ -9,15 +9,15 @@ This is an early stage multi-service honeypot designed to be setup on a virtual 
 
 # Installation 
 
-chmod +x requirements
+chmod +x requirements  
 sudo ./requirements
 
 # Setup environment
 
-chmod +x setup
+chmod +x setup  
 sudo ./setup
 
 # Run Redpot
 
-To be configured...
+To be configured...  
 
