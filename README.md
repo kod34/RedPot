@@ -1,16 +1,18 @@
-# HoneyPotProject
+# RedPot
 
 # Description
 
-This is an early stage multi-service honeypot designed to be setup on a virtual machine. 
+This is an early stage multi-service honeypot designed to be setup on a virtual machine.
 
-# WARNING!!
-# INSTALL ON VIRTUAL MACHINE! DO NOT INSTALL ON YOUR LOCAL MACHINE! YOUR DATA MAY BE LOST!
+# !!WARNING!!  
+# INSTALL ON VIRTUAL MACHINE!
+# DO NOT INSTALL ON YOUR LOCAL MACHINE! YOUR DATA MAY BE LOST!
 
 # Installation 
 
-chmod +x requirements  
-sudo ./requirements
+chmod +x inst  
+sudo ./inst
+sudo pip3 install -r requirements.txt  
 
 # Setup environment
 
@@ -19,5 +21,6 @@ sudo ./setup
 
 # Run Redpot
 
-To be configured...  
+chmod +x redpot  
+sudo ./redpot
 
