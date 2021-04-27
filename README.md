@@ -11,7 +11,7 @@ This is an early stage multi-service honeypot designed to be setup on a virtual 
 # Installation 
 
 chmod +x inst  
-sudo ./inst
+sudo ./inst  
 sudo pip3 install -r requirements.txt  
 
 # Setup environment
