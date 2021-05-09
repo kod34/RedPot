@@ -1,0 +1,11 @@
+[Unit]
+Description=ssh server
+
+[Service]
+Type=simple
+WorkingDirectory=/root
+ExecStart=/usr/bin/python3 /redpot/ssh/fakessh.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

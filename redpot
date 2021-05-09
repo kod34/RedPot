@@ -1,0 +1,13 @@
+#!/bin/bash
+set -e
+if [[ $EUID -ne 0 ]];then
+        echo "[!] Must be run as Root"
+        exit 1
+fi
+echo -------------------------------------------------------------------
+echo ‎‎‎‎'                       'STARTING SSH HONEYPOT
+echo -------------------------------------------------------------------
+echo [+] Starting SSH Honeypot...
+systemctl start fakessh
+echo [+] Done
+echo [*] View logs at /redpot/logs/fakessh.log

@@ -1,0 +1,109 @@
+#!/bin/bash
+set -e
+if [[ $EUID -ne 0 ]];then
+	echo "[!] Must be run as Root"
+	exit 1
+fi
+echo -------------------------------------------------------------------
+echo ‎‎‎‎'                       'SETTING UP REDPOT
+echo -------------------------------------------------------------------
+echo [+] Creating directory /redpot
+rm -r /redpot
+mkdir -p /redpot
+sleep 1
+echo [+] Creating log directory /redpot/logs
+mkdir -p /redpot/logs
+sleep 1
+echo [+] Done
+echo -------------------------------------------------------------------
+echo ‎‎‎‎‎‎‎‎‎‎'                       'SETTING UP WEB APP
+echo -------------------------------------------------------------------
+echo [+] Creating directory /redpot/apache
+mkdir -p /redpot/apache
+sleep 1
+echo
+echo "Website templates available: "
+echo 
+echo 1 : bootstrap-shop
+echo 2 : digishop-mini
+echo
+read -p "The Website template you choose: " template
+
+if [ $template == 1 ]
+then
+	echo [+] Downloading website files...
+	wget -P /redpot/apache https://www.free-css.com/assets/files/free-css-templates/download/page194/bootstrap-shop.zip
+	echo [+] Extracting files...
+	unzip /redpot/apache/bootstrap-shop.zip -d /redpot/apache/
+	echo [+] Copying files to /var/www/html
+	cp -r /redpot/apache/bootstrap-shop/* /var/www/html/
+	sleep 1
+	echo [+] Configuring hostnames file /etc/hosts... 
+	echo "127.0.0.1 bootstrap-shop.com www.bootstrap-shop.com" >> /etc/hosts
+	sleep 1
+	echo [+] Starting the Apache server...
+	systemctl start apache2
+	systemctl reload apache2
+	sleep 1
+	echo [+] Done
+	echo 
+	echo [*] Fake website url: http://bootstrap-shop.com
+	
+elif [ $template == 2 ]
+then
+	echo [+] Creating directory /redpot/apache
+	mkdir -p /redpot/apache
+	sleep 1
+	echo [+] Downloading website files...
+	wget -P /redpot/apache https://www.free-css.com/assets/files/free-css-templates/download/page201/digishop-mini.zip
+	echo [+] Extracting files...
+	unzip /redpot/apache/digishop-mini.zip -d /redpot/apache/
+	echo [+] Copying files to /var/www/html
+	cp -r /redpot/apache/bs-digishop-mini/* /var/www/html/
+	sleep 1
+	echo [+] Configuring hostnames file /etc/hosts... 
+	echo "127.0.0.1 digishop-mini.com www.digishop-mini.com" >> /etc/hosts
+	sleep 1
+	echo [+] Starting the Apache server...
+	systemctl start apache2
+	systemctl reload apache2
+	sleep 1
+	echo [+] Done
+	echo 
+	echo [*] Fake website url: http://digishop-mini.com
+
+else
+	echo [-] Unknown Option
+	exit 1
+fi
+
+echo -------------------------------------------------------------------
+echo ‎‎‎‎‎‎‎‎‎‎'                     'SETTING UP MYSQL DATABASE
+echo -------------------------------------------------------------------
+echo [+] Creating user admin...
+sudo mysql --execute="CREATE USER 'admin'@'%' IDENTIFIED BY 'admin';GRANT SELECT ON *.* TO 'admin'@'%';"
+sleep 1
+echo [+] Configuring file /etc/mysql/mysql.conf.d/mysqld.cnf
+sed -i '31s/.*/bind-address = 0.0.0.0/' /etc/mysql/mysql.conf.d/mysqld.cnf
+sleep 1
+echo [+] Restarting mysql service...
+systemctl restart mysql.service
+sleep 1
+echo [+] Populating MySQL Database...
+python3 services/mysql/mysql_junk.py
+echo [+] Done
+echo -------------------------------------------------------------------
+echo ‎‎‎‎'                       'SETTING UP SSH SERVER
+echo -------------------------------------------------------------------
+echo [+] Creating directory /redpot/ssh
+mkdir -p /redpot/ssh
+sleep 1
+echo [+] Copying python script to /redpot/ssh
+cp services/ssh/fakessh.py /redpot/ssh
+cp -r services/ssh/keys/ /redpot/ssh
+sleep 1
+echo [+] Creating systemd file
+cp services/ssh/fakessh.service /etc/systemd/system
+systemctl daemon-reload
+sleep 1
+echo [+] Done
