@@ -69,7 +69,6 @@ then
 	systemctl reload apache2
 	sleep 1
 	echo [+] Done
-	echo 
 	echo [*] Fake website url: http://digishop-mini.com
 
 else
