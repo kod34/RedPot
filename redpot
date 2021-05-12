@@ -5,9 +5,12 @@ if [[ $EUID -ne 0 ]];then
         exit 1
 fi
 echo -------------------------------------------------------------------
-echo ‎‎‎‎'                       'STARTING SSH HONEYPOT
+echo ‎‎‎‎'                     'Starting SSH HoneyPot
 echo -------------------------------------------------------------------
-echo [+] Starting SSH Honeypot...
+echo [+] Stopping SSH server
+sleep 1
+echo [+] Starting Fake-SSH Honeypot...
 systemctl start fakessh
+sleep 1
 echo [+] Done
-echo [*] View logs at /redpot/logs/fakessh.log
+echo [*] You can view logs at: /redpot/logs/fakessh.log
