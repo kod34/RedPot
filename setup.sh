@@ -42,12 +42,16 @@ case $continue in
 	echo
 	echo "Website Templates Available: "
 	echo 
-	echo 1 : bootstrap-shop
-	echo 2 : digishop-mini
+	echo 1 : Bootstrap-shop
+	echo 2 : Digishop-mini
+	echo 3 : Pomato-shop
+	echo 4 : Electronix
+	echo 5 : Tool-shop
 	echo
 	read -p "Which template would you like to use? " template
+	sleep 1
 	case $template in
-		1|One|bootstrap-shop)
+		1|Bootstrap-shop)
 		echo [+] Downloading website files...
 		wget -P /redpot/apache https://www.free-css.com/assets/files/free-css-templates/download/page194/bootstrap-shop.zip
 		echo [+] Extracting files...
@@ -67,8 +71,7 @@ case $continue in
 		echo [+] Done
 		echo [*] Fake website url: http://bootstrap-shop.com
 		;;
-
-		2|Two|digishop-mini)
+		2|Digishop-mini)
 		echo [+] Creating directory /redpot/apache
 		mkdir -p /redpot/apache
 		sleep 1
@@ -90,6 +93,75 @@ case $continue in
 		systemctl restart apache2
 		echo [+] Done
 		echo [*] Fake website url: http://digishop-mini.com
+		;;
+		3|Pomato-shop)
+		echo [+] Creating directory /redpot/apache
+		mkdir -p /redpot/apache
+		sleep 1
+		echo [+] Downloading website files...
+		wget -P /redpot/apache https://www.free-css.com/assets/files/free-css-templates/download/page262/pomato.zip
+		echo [+] Extracting files...
+		unzip /redpot/apache/pomato.zip -d /redpot/apache/
+		echo [+] Copying files to /var/www/html
+		cp -r /redpot/apache/pomato/* /var/www/html/
+		sleep 1
+		# echo [+] Configuring Ports...
+		# sed -i '5s/.*/Listen '$port'/' /etc/apache2/ports.conf
+		# sed -i '1s/.*/<VirtualHost *:'$port'>/' /etc/apache2/sites-available/000-default.conf
+		# sleep 1
+		echo [+] Configuring hostnames file /etc/hosts... 
+		echo "127.0.0.1 pomato-shop.com www.pomato-shop.com" >> /etc/hosts
+		sleep 1
+		echo [+] Starting the Apache server...
+		systemctl restart apache2
+		echo [+] Done
+		echo [*] Fake website url: http://pomato-shop.com
+		;;
+		4|Electronix)
+		echo [+] Creating directory /redpot/apache
+		mkdir -p /redpot/apache
+		sleep 1
+		echo [+] Downloading website files...
+		wget -P /redpot/apache https://www.free-css.com/assets/files/free-css-templates/download/page87/electronix.zip
+		echo [+] Extracting files...
+		unzip /redpot/apache/electronix.zip -d /redpot/apache/
+		echo [+] Copying files to /var/www/html
+		cp -r /redpot/apache/electronix/* /var/www/html/
+		sleep 1
+		# echo [+] Configuring Ports...
+		# sed -i '5s/.*/Listen '$port'/' /etc/apache2/ports.conf
+		# sed -i '1s/.*/<VirtualHost *:'$port'>/' /etc/apache2/sites-available/000-default.conf
+		# sleep 1
+		echo [+] Configuring hostnames file /etc/hosts... 
+		echo "127.0.0.1 electronix-shop.com www.electronix-shop.com" >> /etc/hosts
+		sleep 1
+		echo [+] Starting the Apache server...
+		systemctl restart apache2
+		echo [+] Done
+		echo [*] Fake website url: http://electronix-shop.com
+		;;
+		5|Tool-shop)
+		echo [+] Creating directory /redpot/apache
+		mkdir -p /redpot/apache
+		sleep 1
+		echo [+] Downloading website files...
+		wget -P /redpot/apache https://www.free-css.com/assets/files/free-css-templates/download/page88/tool-shop.zip
+		echo [+] Extracting files...
+		unzip /redpot/apache/tool-shop.zip -d /redpot/apache/
+		echo [+] Copying files to /var/www/html
+		cp -r /redpot/apache/tool-shop/* /var/www/html/
+		sleep 1
+		# echo [+] Configuring Ports...
+		# sed -i '5s/.*/Listen '$port'/' /etc/apache2/ports.conf
+		# sed -i '1s/.*/<VirtualHost *:'$port'>/' /etc/apache2/sites-available/000-default.conf
+		# sleep 1
+		echo [+] Configuring hostnames file /etc/hosts... 
+		echo "127.0.0.1 tool-shop.ma www.tool-shop.ma" >> /etc/hosts
+		sleep 1
+		echo [+] Starting the Apache server...
+		systemctl restart apache2
+		echo [+] Done
+		echo [*] Fake website url: http://tool-shop.ma
 		;;
 		*)
 		echo [-] Unknown Option
