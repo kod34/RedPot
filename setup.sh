@@ -20,7 +20,7 @@ case $continue in
 	echo ‎‎‎‎'                    'Configuring Environment
 	echo -------------------------------------------------------------------
 	echo [+] Creating directory /redpot
-	rm -r /redpot ||:
+	rm -rf /redpot
 	mkdir -p /redpot
 	sleep 1
 	echo [+] Creating log directory /redpot/logs
