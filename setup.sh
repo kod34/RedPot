@@ -4,31 +4,32 @@ if [[ $EUID -ne 0 ]];then
 	echo "[!] The Script must be run as Root!"
 	exit 1
 fi
-echo ---------------------------------------------------------------------
-echo ‎‎‎WARNING: Setting up the vulnerable environment might cause data loss!
-echo ---------------------------------------------------------------------
+echo -e "\033[31mSetting up the vulnerable environment might cause you to lose sensitive data\033[0m"
 sleep 1
-echo 
-read -p 'Do you wish to continue? (Y/n) ' continue
+read -p 'Do you wish to continue?(Y/N) ' continue
+echo
 case $continue in 
 	n|N|No|no|No)
+	echo -e '\033[31mExiting...\033[0m'
+	sleep 1
 	exit 1
 	;;
 
 	y|Y|yes|Yes|YES)
 	echo -------------------------------------------------------------------
-	echo ‎‎‎‎'                    'Configuring Environment
+	echo ‎‎‎‎'                    'Configuring the environment
 	echo -------------------------------------------------------------------
 	echo [+] Creating directory /redpot
-	rm -r /redpot ||:
+	rm -rf /redpot
 	mkdir -p /redpot
 	sleep 1
-	echo [+] Creating log directory /redpot/logs
-	mkdir -p /redpot/logs
+	echo [+] Creating log directories in /redpot/logs
+	mkdir -p /redpot/logs/SSH
+	mkdir -p /redpot/logs/IDS
 	sleep 1
 	echo [+] Done
 	echo -------------------------------------------------------------------
-	echo ‎‎‎‎‎‎‎‎‎‎'                       'Configuring Website
+	echo ‎‎‎‎‎‎‎‎‎‎'                     'Configuring the Web server
 	echo -------------------------------------------------------------------
 	# read -p 'The Port Where The Webserver Should Run On: ' port
 	# while ! [[ $port =~ ^[0-9]+$ ]] || [ $port -gt 49151 ]
@@ -171,7 +172,7 @@ case $continue in
 		;;
 	esac
 	echo -------------------------------------------------------------------
-	echo ‎‎‎‎'                    'Configuring SSH Server
+	echo ‎‎‎‎'                    'Configuring the SSH server
 	echo -------------------------------------------------------------------
 	# read -p 'The Port Where The SSH Server Should Run On: ' port2
 	# while ! [[ $port2 =~ ^[0-9]+$ ]] || [ $port2 -gt 49151 ] || [ $port2 -eq $port ]
@@ -182,7 +183,7 @@ case $continue in
 	echo [+] Creating directory /redpot/ssh
 	mkdir -p /redpot/ssh
 	sleep 1
-	echo [+] Copying python script to /redpot/ssh
+	echo [+] Copying relevant files to /redpot/ssh
 	cp services/ssh/fakessh.py /redpot/ssh
 	cp -r services/ssh/keys/ /redpot/ssh
 	sleep 1
@@ -192,9 +193,9 @@ case $continue in
 	sleep 1
 	echo [+] Done
 	echo -------------------------------------------------------------------
-	echo ‎‎‎‎‎‎‎‎‎‎'                   'Configuring MySQL Database
+	echo ‎‎‎‎‎‎‎‎‎‎'                   'Configuring the MySql database
 	echo -------------------------------------------------------------------
-	echo [+] Creating user admin...
+	echo [+] Creating user "'"'admin'"'"...
 	# To avoid errors
 	sudo mysql --execute="DROP USER IF EXISTS admin;CREATE USER 'admin'@'%' IDENTIFIED BY 'admin';GRANT SELECT ON *.* TO 'admin'@'%';"
 	sleep 1
@@ -205,6 +206,20 @@ case $continue in
 	systemctl restart mysql.service
 	echo [+] Populating MySQL Database...
 	python3 services/mysql/mysql_junk.py
+	echo [+] Done
+	echo -------------------------------------------------------------------
+	echo ‎‎‎‎‎‎‎‎‎‎'                      'Configuring the IDS
+	echo -------------------------------------------------------------------
+	echo [+] Creating directory /redpot/IDS
+	mkdir -p /redpot/IDS
+	sleep 1
+	echo [+] Copying relevant files to /redpot/IDS
+	cp -r services/IDS/src_code /redpot/IDS
+	sleep 1
+	echo [+] Creating systemd file
+	cp services/IDS/redpot_ids.service /etc/systemd/system
+	systemctl daemon-reload
+	sleep 1
 	echo [+] Done
 	;;
 esac

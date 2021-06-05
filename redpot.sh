@@ -5,7 +5,7 @@ if [[ $EUID -ne 0 ]];then
         exit 1
 fi
 echo -------------------------------------------------------------------
-echo ‎‎‎‎'                     'Starting SSH HoneyPot
+echo ‎‎‎‎'                    'Starting the SSH HoneyPot
 echo -------------------------------------------------------------------
 echo [+] Stopping SSH server
 sleep 1
@@ -14,3 +14,13 @@ systemctl start fakessh
 sleep 1
 echo [+] Done
 echo [*] You can view logs at: /redpot/logs/fakessh.log
+echo -------------------------------------------------------------------
+echo ‎‎‎‎'                      'Starting the RedPot IDS
+echo -------------------------------------------------------------------
+sleep 1
+echo [+] Starting redpot_ids service...
+systemctl start redpot_ids
+sleep 1
+echo [+] Done
+echo [*] You can view Packet logs at: /redpot/logs/IDS/Redpot_ids.log
+echo [*] You can view Intrusion logs at: /redpot/logs/IDS/intrusions.logs

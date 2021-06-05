@@ -10,7 +10,7 @@ import time
 from datetime import datetime
 
 
-LOG = open("/redpot/logs/fakessh.log", "a")
+LOG = open("/redpot/logs/SSH/fakessh.log", "a")
 HOST_KEY = paramiko.RSAKey(filename='/redpot/ssh/keys/private.key')
 SSH_BANNER = "SSH-2.0-OpenSSH_8.2p1 Ubuntu-4ubuntu0.1"
 
