@@ -13,7 +13,7 @@ echo [+] Starting Fake-SSH Honeypot...
 systemctl start fakessh
 sleep 1
 echo [+] Done
-echo [*] You can view logs at: /redpot/logs/fakessh.log
+echo [*] You can view logs at: /redpot/logs/SSH/fakessh.log
 echo -------------------------------------------------------------------
 echo ‎‎‎‎'                      'Starting the RedPot IDS
 echo -------------------------------------------------------------------
