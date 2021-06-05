@@ -8,6 +8,8 @@ RED = '\033[91m'
 ENDC = '\033[0m'
 URG = 0x20
 
+attacker_ip = ''
+tcp_payload = ''
 
 def ipString(ip):
 

@@ -1,5 +1,5 @@
 import PacketStrings
-from PacketStrings import packetString
+from PacketStrings import *
 import json
 from datetime import datetime
 import logging

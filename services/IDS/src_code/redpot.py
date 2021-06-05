@@ -11,7 +11,7 @@ ENDC = '\033[0m'
 
 def main():
 
-    logging.basicConfig(filename='/redpot/logs/IDS/Redpot_ids.log', filemode = 'a', level=logging.INFO)
+    logging.basicConfig(filename='/redpot/logs/IDS/all_packets.log', filemode = 'a', level=logging.INFO)
 
     Sniffer().start()
 

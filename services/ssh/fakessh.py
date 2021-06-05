@@ -110,7 +110,7 @@ class FakeSshServer(paramiko.ServerInterface):
 
 def handle_connection(client, addr):
     """Handle a new ssh connection"""
-    LOG.write("\n"+datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"  [!] Connection from: " + addr[0] + "\n")
+    LOG.write("\n"+datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"  [!] Connection from " + addr[0] + "\n")
     try:
         transport = paramiko.Transport(client)
         transport.add_server_key(HOST_KEY)
@@ -145,7 +145,7 @@ def handle_connection(client, addr):
                 chan.send("\r\n")
                 command = command.rstrip()
                 if command == "exit":
-                    LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"  Connection from: " + addr[0] + " closed.\n")
+                    LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"  Connection from " + addr[0] + " closed.\n")
                     LOG.flush()
                     run = False
                 else:
