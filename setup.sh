@@ -67,8 +67,6 @@ case $continue in
 		echo [+] Configuring hostnames file /etc/hosts... 
 		echo "127.0.0.1 bootstrap-shop.com www.bootstrap-shop.com" >> /etc/hosts
 		sleep 1
-		echo [+] Starting the Apache server...
-		systemctl restart apache2
 		echo [+] Done
 		echo [*] Fake website url: http://bootstrap-shop.com
 		;;
@@ -90,8 +88,6 @@ case $continue in
 		echo [+] Configuring hostnames file /etc/hosts... 
 		echo "127.0.0.1 digishop-mini.com www.digishop-mini.com" >> /etc/hosts
 		sleep 1
-		echo [+] Starting the Apache server...
-		systemctl restart apache2
 		echo [+] Done
 		echo [*] Fake website url: http://digishop-mini.com
 		;;
@@ -113,8 +109,6 @@ case $continue in
 		echo [+] Configuring hostnames file /etc/hosts... 
 		echo "127.0.0.1 pomato-shop.com www.pomato-shop.com" >> /etc/hosts
 		sleep 1
-		echo [+] Starting the Apache server...
-		systemctl restart apache2
 		echo [+] Done
 		echo [*] Fake website url: http://pomato-shop.com
 		;;
@@ -136,8 +130,6 @@ case $continue in
 		echo [+] Configuring hostnames file /etc/hosts... 
 		echo "127.0.0.1 electronix-shop.com www.electronix-shop.com" >> /etc/hosts
 		sleep 1
-		echo [+] Starting the Apache server...
-		systemctl restart apache2
 		echo [+] Done
 		echo [*] Fake website url: http://electronix-shop.com
 		;;
@@ -159,8 +151,6 @@ case $continue in
 		echo [+] Configuring hostnames file /etc/hosts... 
 		echo "127.0.0.1 tool-shop.ma www.tool-shop.ma" >> /etc/hosts
 		sleep 1
-		echo [+] Starting the Apache server...
-		systemctl restart apache2
 		echo [+] Done
 		echo [*] Fake website url: http://tool-shop.ma
 		;;
@@ -221,5 +211,40 @@ case $continue in
 	systemctl daemon-reload
 	sleep 1
 	echo [+] Done
+	echo -------------------------------------------------------------------
+	echo ‎‎‎‎‎‎‎‎‎‎'                     'Configuring ELK
+	echo -------------------------------------------------------------------
+	echo [+] Configuring File elasticsearch.yml
+	sed -i '/cluster\.name/s/^#//g' /etc/elasticsearch/elasticsearch.yml
+	sed -i '/node\.name/s/^#//g' /etc/elasticsearch/elasticsearch.yml
+	sed -i 's/#network\.host: 192\.168\.0\.1/network\.host: localhost/' /etc/elasticsearch/elasticsearch.yml
+	sed -i '/http\.port/s/^#//g' /etc/elasticsearch/elasticsearch.yml
+	sleep 1
+	echo [+] Starting Elasticsearch...
+	systemctl start elasticsearch
+	sleep 1
+	echo [+] Configuring File kibana.yml
+	sed -i '/server\.port/s/^#//g' /etc/kibana/kibana.yml
+	sed -i '/server\.host/s/^#//g' /etc/kibana/kibana.yml
+	sleep 1
+	echo [+] Starting Kibana...
+	systemctl start kibana
+	sleep 1
+	echo [+] Setting up Admin Credentials...
+	read -p 'Kibana username: ' kibadmin
+	read -p 'Kibana Password: ' kibpass
+	htpasswd -cb /etc/apache2/htpasswd.users $kibadmin $kibpass
+	echo [*] 'Admin credentials are stored in /etc/apache2/htpasswd.users'
+	sleep 2
+	echo [+] Configuring the Kibana Web page on Port 5001...
+	cp services/elk/elk.conf /etc/apache2/sites-available
+	a2enmod proxy
+	a2enmod proxy_http
+	a2ensite elk.conf
+	sleep 1
+	echo [+] Starting the Apache server...
+	systemctl restart apache2
+	echo [+] Done
+	echo [*] You can view the real-time data at: http://localhost:5001
 	;;
 esac
