@@ -8,9 +8,12 @@ import traceback
 import paramiko
 import time
 from datetime import datetime
+import json
+from urllib.request import urlopen
 
 
 LOG = open("/redpot/logs/SSH/fakessh.log", "a")
+LOG_CSV = open("/var/www/web_stats/csv_files/fakessh.csv", "a")
 HOST_KEY = paramiko.RSAKey(filename='/redpot/ssh/keys/private.key')
 SSH_BANNER = "SSH-2.0-OpenSSH_8.2p1 Ubuntu-4ubuntu0.1"
 
@@ -110,7 +113,13 @@ class FakeSshServer(paramiko.ServerInterface):
 
 def handle_connection(client, addr):
     """Handle a new ssh connection"""
+    url = 'http://ipinfo.io/'+addr[0]+'/json'
+    response = urlopen(url)
+    data = json.load(response)
+    country = data['country']
+
     LOG.write("\n"+datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"  [!] Connection from " + addr[0] + "\n")
+    LOG_CSV.write(datetime.now().strftime("%d/%m/%Y,%H:%M:%S")+","+addr[0]+","+country+"\n")
     try:
         transport = paramiko.Transport(client)
         transport.add_server_key(HOST_KEY)

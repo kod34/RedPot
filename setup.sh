@@ -212,39 +212,23 @@ case $continue in
 	sleep 1
 	echo [+] Done
 	echo -------------------------------------------------------------------
-	echo ‎‎‎‎‎‎‎‎‎‎'                     'Configuring ELK
+	echo ‎‎‎‎‎‎‎‎‎‎'                 'Configuring the Stats website
 	echo -------------------------------------------------------------------
-	echo [+] Configuring File elasticsearch.yml
-	sed -i '/cluster\.name/s/^#//g' /etc/elasticsearch/elasticsearch.yml
-	sed -i '/node\.name/s/^#//g' /etc/elasticsearch/elasticsearch.yml
-	sed -i 's/#network\.host: 192\.168\.0\.1/network\.host: localhost/' /etc/elasticsearch/elasticsearch.yml
-	sed -i '/http\.port/s/^#//g' /etc/elasticsearch/elasticsearch.yml
-	sleep 1
-	echo [+] Starting Elasticsearch...
-	systemctl start elasticsearch
-	sleep 1
-	echo [+] Configuring File kibana.yml
-	sed -i '/server\.port/s/^#//g' /etc/kibana/kibana.yml
-	sed -i '/server\.host/s/^#//g' /etc/kibana/kibana.yml
-	sleep 1
-	echo [+] Starting Kibana...
-	systemctl start kibana
-	sleep 1
 	echo [+] Setting up Admin Credentials...
-	read -p 'Kibana username: ' kibadmin
-	read -p 'Kibana Password: ' kibpass
-	htpasswd -cb /etc/apache2/htpasswd.users $kibadmin $kibpass
+	read -p 'Username: ' admin
+	read -p 'Password: ' pass
+	htpasswd -cb /etc/apache2/htpasswd.users $admin $pass
 	echo [*] 'Admin credentials are stored in /etc/apache2/htpasswd.users'
 	sleep 2
-	echo [+] Configuring the Kibana Web page on Port 5001...
-	cp services/elk/elk.conf /etc/apache2/sites-available
-	a2enmod proxy
-	a2enmod proxy_http
-	a2ensite elk.conf
+	echo [+] Configuring the Web page on Port 5001...
+	cp services/stats/web_stats.conf /etc/apache2/sites-available
+	cp -r services/stats/web_stats /var/www
+	mkdir -p /var/www/web_stats/csv_files
+	a2ensite web_stats.conf
 	sleep 1
 	echo [+] Starting the Apache server...
 	systemctl restart apache2
 	echo [+] Done
-	echo [*] You can view the real-time data at: http://localhost:5001
+	echo [*] You can view the real-time statisctics at: http://localhost:5001
 	;;
 esac
