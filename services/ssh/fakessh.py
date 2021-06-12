@@ -120,6 +120,7 @@ def handle_connection(client, addr):
 
     LOG.write("\n"+datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"  [!] Connection from " + addr[0] + "\n")
     LOG_CSV.write(datetime.now().strftime("%d/%m/%Y,%H:%M:%S")+","+addr[0]+","+country+"\n")
+    LOG_CSV.flush()
     try:
         transport = paramiko.Transport(client)
         transport.add_server_key(HOST_KEY)
