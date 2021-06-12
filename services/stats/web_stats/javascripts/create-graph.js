@@ -1,5 +1,5 @@
 function parseData(createGraph) {
-	Papa.parse("/redpot/logs/csv_files/fakessh.csv", {
+	Papa.parse("../csv_files/fakessh.csv", {
 		download: true,
 		complete: function(results) {
 			createGraph(results.data);

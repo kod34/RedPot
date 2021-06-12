@@ -223,6 +223,7 @@ case $continue in
 	echo [+] Configuring the Web page on Port 5001...
 	cp services/stats/web_stats.conf /etc/apache2/sites-available
 	cp -r services/stats/web_stats /var/www
+	sed -i '6s/.*/Listen 5001/' /etc/apache2/ports.conf
 	mkdir -p /var/www/web_stats/csv_files
 	a2ensite web_stats.conf
 	sleep 1
