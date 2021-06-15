@@ -128,7 +128,7 @@ def handle_connection(client, addr):
     #     LOG_CSV.flush()
     
     try:
-        response = requests.get("https://geolocation-db.com/json/39.110.142.79&position=true").json()
+        response = requests.get("https://geolocation-db.com/json/"+addr[0]+"&position=true").json()
         country = response['country_name']
     except:
         country = 'local'

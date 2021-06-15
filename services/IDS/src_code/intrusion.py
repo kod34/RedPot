@@ -2,7 +2,6 @@ import PacketStrings
 from PacketStrings import *
 import json
 from datetime import datetime
-import logging
 import urllib.parse
 from scapy.all import *
 
@@ -10,7 +9,9 @@ SQLinjections = json.loads(open('/redpot/IDS/src_code/attacks/SQLinjections.json
 XSSinjections = json.loads(open('/redpot/IDS/src_code/attacks/XSSinjections.json').read(), strict=False)
 
 LOG = open("/redpot/logs/IDS/intrusions.log", "a")
+LOG_ports = open("/redpot/logs/IDS/ports.log", "a")
 LOG_CSV = open("/var/www/web_stats/csv_files/intrusions.csv", "a")
+LOG_ports_CSV = open("/var/www/web_stats/csv_files/ports.csv", "a")
 old_ip = ""
 old_load = ""
 
@@ -26,7 +27,7 @@ def SQLintrusion(pkt):
                 LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = SQLinjection | IP = "+ip+" | Payload = "+str(x)+"\r\r\n")
                 LOG.flush()
                 try:
-                    response = requests.get("https://geolocation-db.com/json/39.110.142.79&position=true").json()
+                    response = requests.get("https://geolocation-db.com/json/"+ip+"&position=true").json()
                     country = response['country_name']
                 except:
                     country = 'local'
@@ -50,7 +51,7 @@ def XSSintrusion(pkt):
                 LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = XSS | IP = "+ip+" | Payload = "+str(x)+"\r\r\n")
                 LOG.flush()
                 try:
-                    response = requests.get("https://geolocation-db.com/json/39.110.142.79&position=true").json()
+                    response = requests.get("https://geolocation-db.com/json/"+ip+"&position=true").json()
                     country = response['country_name']
                 except:
                     country = 'local'
@@ -59,3 +60,19 @@ def XSSintrusion(pkt):
                     LOG_CSV.flush()
                     old_ip = ip
                     old_load = x
+
+
+def Port_scanner(pkt):
+    port = PacketStrings.target_port
+    ip = PacketStrings.attacker_ip
+    if(port != ''):
+        try:
+            response = requests.get("https://geolocation-db.com/json/"+ip+"&position=true").json()
+            country = response['country_name']
+        except:
+            country = 'local'
+        finally:
+            LOG_ports.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Port "+str(port)+" is catching traffic from IP "+ip+"\r\r\n")
+            LOG_ports_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+str(port)+","+ip+","+country+"\n")
+            LOG_ports.flush()
+            LOG_ports_CSV.flush()

@@ -10,6 +10,7 @@ URG = 0x20
 
 attacker_ip = ''
 tcp_payload = ''
+target_port = ''
 
 def ipString(ip):
 
@@ -76,6 +77,7 @@ def payloadString(pkt):
 def packetString(pkt):
     global attacker_ip
     global tcp_payload
+    global target_port
 
     out = ""
     if (IP in pkt):
@@ -86,10 +88,12 @@ def packetString(pkt):
         pass
     if (TCP in pkt):
         tcp_payload = payloadString(pkt[TCP])
+        target_port = pkt[TCP].dport
         out += tcpString(pkt[TCP])
         out += "[TCP Payload]" + "\n"
         out+= payloadString(pkt[TCP])
     elif (UDP in pkt):
+        target_port = pkt[UDP].dport
         out += udpString(pkt[UDP])
         out += "[UDP Payload]" + "\n"
         out += payloadString(pkt[UDP])
