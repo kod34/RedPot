@@ -216,7 +216,7 @@ case $continue in
 	echo -------------------------------------------------------------------
 	echo [+] Setting up Admin Credentials...
 	read -p 'Username: ' admin
-	read -p 'Password: ' pass
+	read -s -p 'Password: ' pass
 	htpasswd -cb /etc/apache2/htpasswd.users $admin $pass
 	echo [*] 'Admin credentials are stored in /etc/apache2/htpasswd.users'
 	sleep 2

@@ -8,8 +8,8 @@ import traceback
 import paramiko
 import time
 from datetime import datetime
-import json
 from urllib.request import urlopen
+import requests
 
 
 LOG = open("/redpot/logs/SSH/fakessh.log", "a")
@@ -113,14 +113,29 @@ class FakeSshServer(paramiko.ServerInterface):
 
 def handle_connection(client, addr):
     """Handle a new ssh connection"""
-    url = 'http://ipinfo.io/'+addr[0]+'/json'
-    response = urlopen(url)
-    data = json.load(response)
-    country = data['country']
-
     LOG.write("\n"+datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"  [!] Connection from " + addr[0] + "\n")
-    LOG_CSV.write(datetime.now().strftime("%d/%m/%Y,%H:%M:%S")+","+addr[0]+","+country+"\n")
-    LOG_CSV.flush()
+    # NOT OPTIMAL BUT MAY BE USEFUL
+    # try:
+    #     url = 'http://ipinfo.io/'+addr[0]+'/json'
+    #     response = urlopen(url)
+    #     data = json.load(response)
+    #     country = data['country']
+    # except:
+    #     country = 'local'
+    # finally:
+    #     LOG.write("\n"+datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"  [!] Connection from " + addr[0] + "\n")
+    #     LOG_CSV.write(datetime.now().strftime("%d/%m/%Y,%H:%M:%S")+","+addr[0]+","+country+"\n")
+    #     LOG_CSV.flush()
+    
+    try:
+        response = requests.get("https://geolocation-db.com/json/39.110.142.79&position=true").json()
+        country = response['country_name']
+    except:
+        country = 'local'
+    finally:
+        LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+addr[0]+","+country+"\n")
+        LOG_CSV.flush()
+        
     try:
         transport = paramiko.Transport(client)
         transport.add_server_key(HOST_KEY)

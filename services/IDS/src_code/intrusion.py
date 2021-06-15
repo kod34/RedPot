@@ -10,6 +10,7 @@ SQLinjections = json.loads(open('/redpot/IDS/src_code/attacks/SQLinjections.json
 XSSinjections = json.loads(open('/redpot/IDS/src_code/attacks/XSSinjections.json').read(), strict=False)
 
 LOG = open("/redpot/logs/IDS/intrusions.log", "a")
+LOG_CSV = open("/var/www/web_stats/csv_files/intrusions.csv", "a")
 old_ip = ""
 old_load = ""
 
@@ -24,8 +25,16 @@ def SQLintrusion(pkt):
             if ((old_ip != new_ip or old_load != x) and conf.route.route("0.0.0.0")[2] != ip and urllib.parse.quote_plus(x) in sus):
                 LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = SQLinjection | IP = "+ip+" | Payload = "+str(x)+"\r\r\n")
                 LOG.flush()
-                old_ip = ip
-                old_load = x
+                try:
+                    response = requests.get("https://geolocation-db.com/json/39.110.142.79&position=true").json()
+                    country = response['country_name']
+                except:
+                    country = 'local'
+                finally:
+                    LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",SQLinjection,"+ip+","+country+"\n")
+                    LOG_CSV.flush()
+                    old_ip = ip
+                    old_load = x
 
 
 
@@ -40,5 +49,13 @@ def XSSintrusion(pkt):
             if ((old_ip != new_ip or old_load != x) and conf.route.route("0.0.0.0")[2] != ip and urllib.parse.quote_plus(x) in sus):
                 LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = XSS | IP = "+ip+" | Payload = "+str(x)+"\r\r\n")
                 LOG.flush()
-                old_ip = ip
-                old_load = x
+                try:
+                    response = requests.get("https://geolocation-db.com/json/39.110.142.79&position=true").json()
+                    country = response['country_name']
+                except:
+                    country = 'local'
+                finally:
+                    LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",XSS,"+ip+","+country+"\n")
+                    LOG_CSV.flush()
+                    old_ip = ip
+                    old_load = x
