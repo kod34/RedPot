@@ -17,6 +17,8 @@ echo [*] You can view logs at: /redpot/logs/SSH/fakessh.log
 echo -------------------------------------------------------------------
 echo ‎‎‎‎'                      'Starting the RedPot IDS
 echo -------------------------------------------------------------------
+read -p 'Minimum Packet rate (Packets per minute) to be detected as a flood Attack: ' prate
+sed -i "100s/threshold.*/threshold = $prate/" /redpot/IDS/src_code/intrusion.py
 sleep 1
 echo [+] Starting redpot_ids service...
 systemctl start redpot_ids
