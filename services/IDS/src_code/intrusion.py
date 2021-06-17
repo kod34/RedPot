@@ -26,7 +26,7 @@ def SQLintrusion(pkt):
     ip = PacketStrings.attacker_ip
     sus = PacketStrings.tcp_payload
     new_ip = ip
-    if (len(sus) != 0 and (port == 80 or port == 3306)):
+    if (len(sus) != 0):
         for x in SQLinjections:
             if ((old_ip != new_ip or old_load != x) and conf.route.route("0.0.0.0")[2] != ip and urllib.parse.quote_plus(x) in sus):
                 LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = SQLinjection | IP = "+ip+" | Payload = "+str(x)+"\r\r\n")
@@ -53,7 +53,7 @@ def XSSintrusion(pkt):
     ip = PacketStrings.attacker_ip
     sus = PacketStrings.tcp_payload
     new_ip = ip
-    if (len(sus) != 0 and port == 80):
+    if (len(sus) != 0):
         for x in XSSinjections:
             if ((old_ip != new_ip or old_load != x) and conf.route.route("0.0.0.0")[2] != ip and urllib.parse.quote_plus(x) in sus):
                 LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = XSS | IP = "+ip+" | Payload = "+str(x)+"\r\r\n")

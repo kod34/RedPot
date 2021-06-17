@@ -230,6 +230,6 @@ case $continue in
 	echo [+] Starting the Apache server...
 	systemctl restart apache2
 	echo [+] Done
-	echo [*] You can view the real-time statisctics at: http://localhost:5001
+	echo [*] You can view real-time intrusion statistics at: http://localhost:5001
 	;;
 esac

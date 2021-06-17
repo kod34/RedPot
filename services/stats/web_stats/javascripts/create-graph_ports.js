@@ -24,14 +24,24 @@ function foo(arr) {
 	  return [a, b];
 	}
 
+var ips = [];
+var ttacks = [];
+var Arr=[];
+var k = 'Arr';
+var Att=[];
+var k2 = 'Att';
+var ports = ['21', '22', '23', '25', '42', '53', '80', '88', '110', '119', '135', '137', '138', '138', '143', '443', '465', '993', '995', '1025', '3306'];
+
+	
 function createGraph(data) {
-	var ips = [];
+
 	for (var i = 0; i < data.length-1; i++) {
-		ips.push(data[i][4])
+		if (data[i][4] != 'local' && ports.indexOf(data[i][2]) !== -1){
+			ips.push(data[i][4]);
+			ttacks.push(data[i][2]);
+		}
 	}
 
-	var Arr=[];
-	var k = 'Arr';
 	var result = foo(ips);	
 	for (var i=0; i<result[0].length; i++){
 		eval(k+i+'='+'['+'result[0][i]'+','+result[1][i]+'];');
@@ -49,17 +59,11 @@ function createGraph(data) {
 	    bindto: "#chart2"
 	});
 
-	var ttacks = [];
-	for (var i = 0; i < data.length-1; i++) {
-		ttacks.push(data[i][2])
-	}
 
-	var Att=[];
-	var k = 'Att';
 	var result = foo(ttacks);	
 	for (var i=0; i<result[0].length; i++){
-		eval(k+i+'='+'['+'result[0][i]'+','+result[1][i]+'];');
-		eval(k+'.push('+k+i+');');
+		eval(k2+i+'='+'['+'result[0][i]'+','+result[1][i]+'];');
+		eval(k2+'.push('+k2+i+');');
 	}
 
 	var chart = c3.generate({
