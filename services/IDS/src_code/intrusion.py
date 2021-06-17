@@ -4,6 +4,7 @@ import json
 from datetime import datetime
 import urllib.parse
 from scapy.all import *
+import requests
 
 SQLinjections = json.loads(open('/redpot/IDS/src_code/attacks/SQLinjections.json').read())
 XSSinjections = json.loads(open('/redpot/IDS/src_code/attacks/XSSinjections.json').read(), strict=False)

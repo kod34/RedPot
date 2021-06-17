@@ -5,6 +5,18 @@ if [[ $EUID -ne 0 ]];then
         exit 1
 fi
 echo -------------------------------------------------------------------
+echo ‎‎‎‎'                    'Starting the Apache Server
+echo -------------------------------------------------------------------
+systemctl restart apache2
+sleep 1
+echo [+] Done
+echo -------------------------------------------------------------------
+echo ‎‎‎‎'                    'Starting the MySql Server
+echo -------------------------------------------------------------------
+systemctl restart mysql.service
+sleep 1
+echo [+] Done
+echo -------------------------------------------------------------------
 echo ‎‎‎‎'                    'Starting the SSH HoneyPot
 echo -------------------------------------------------------------------
 echo [+] Stopping SSH server
