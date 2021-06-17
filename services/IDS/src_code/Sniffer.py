@@ -38,10 +38,6 @@ class Sniffer(Thread):
         #log DOS attack
         Flood(pkt)
 
-        #log DDOS attack
-        DDOS(pkt)
-
-
 
     def run(self):
         sniff(prn=self.inPacket, lfilter=lambda pkt: pkt[Ether].src != Ether().src, store=0, stop_filter=self.stopfilter)

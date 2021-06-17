@@ -5,7 +5,7 @@
 
 		<!-- Load c3.css -->
 		<link href="stylesheets/c3.css" rel="stylesheet" type="text/css">
-		<link rel="shortcut icon" href="/favicon.ico" />
+		<link rel="shortcut icon" href="images/logo.ico" />
 
 		<!-- Load d3.js and c3.js -->
 		<script src="javascripts/d3.v3.min.js" charset="utf-8"></script>
