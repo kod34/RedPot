@@ -133,6 +133,8 @@ def handle_connection(client, addr):
     except:
         country = 'local'
     finally:
+        if(country == 'Not found'):
+            country = 'local'
         LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+addr[0]+","+country+"\n")
         LOG_CSV.flush()
         

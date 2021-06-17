@@ -36,6 +36,8 @@ def SQLintrusion(pkt):
                 except:
                     country = 'local'
                 finally:
+                    if(country == 'Not found'):
+                        country = 'local'
                     LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",SQLinjection,"+ip+","+country+"\n")
                     LOG_CSV.flush()
                     old_ip = ip
@@ -61,6 +63,8 @@ def XSSintrusion(pkt):
                 except:
                     country = 'local'
                 finally:
+                    if(country == 'Not found'):
+                        country = 'local'
                     LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",XSS,"+ip+","+country+"\n")
                     LOG_CSV.flush()
                     old_ip = ip
@@ -77,6 +81,8 @@ def Port_scanner(pkt):
         except:
             country = 'local'
         finally:
+            if(country == 'Not found'):
+                country = 'local'
             LOG_ports.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Port "+str(port)+" is catching traffic from IP "+ip+"\r\r\n")
             LOG_ports_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+str(port)+","+ip+","+country+"\n")
             LOG_ports.flush()
@@ -109,6 +115,8 @@ def Flood(pkt):
                 except:
                     country = 'local'
                 finally:
+                    if(country == 'Not found'):
+                        country = 'local'
                     LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",TCP/UDP Flood,"+dos_ip+","+country+"\n")
                     LOG_CSV.flush()
 

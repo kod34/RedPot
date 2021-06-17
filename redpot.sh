@@ -10,7 +10,7 @@ echo -------------------------------------------------------------------
 echo [+] Stopping SSH server
 sleep 1
 echo [+] Starting Fake-SSH Honeypot...
-systemctl start fakessh
+systemctl restart fakessh
 sleep 1
 echo [+] Done
 echo [*] You can view logs at: /redpot/logs/SSH/fakessh.log
@@ -21,7 +21,7 @@ read -p 'Minimum Packet rate (Packets per minute) to be detected as a flood Atta
 sed -i "s/threshold =.*/threshold = $prate/" /redpot/IDS/src_code/intrusion.py
 sleep 1
 echo [+] Starting redpot_ids service...
-systemctl start redpot_ids
+systemctl restart redpot_ids
 sleep 1
 echo [+] Done
 echo [*] You can view Packet logs at: /redpot/logs/IDS/Redpot_ids.log
