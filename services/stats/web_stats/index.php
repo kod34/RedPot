@@ -4,6 +4,7 @@
 		<title>Attack Statistics</title>
 
 		<link href="stylesheets/c3.css" rel="stylesheet" type="text/css">
+		<link rel="shortcut icon" href="/favicon.ico" />
 
 		<script src="" charset="utf-8"></script>
 		<script src=""></script>

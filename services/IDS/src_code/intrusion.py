@@ -123,6 +123,3 @@ def Flood(pkt):
 
         ip_dict = {}
         tstamp1 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
-
-def DDOS(pkt):
-    pass

@@ -113,7 +113,7 @@ class FakeSshServer(paramiko.ServerInterface):
 
 def handle_connection(client, addr):
     """Handle a new ssh connection"""
-    LOG.write("\n"+datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"  [!] Connection from " + addr[0] + "\n")
+    LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"  [!] Connection from " + addr[0] + "\n")
     # NOT OPTIMAL BUT MAY BE USEFUL
     # try:
     #     url = 'http://ipinfo.io/'+addr[0]+'/json'

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -5,6 +6,7 @@
 
 		<!-- Load c3.css -->
 		<link href="stylesheets/c3.css" rel="stylesheet" type="text/css">
+		<link rel="shortcut icon" href="/favicon.ico" />
 
 		<!-- Load d3.js and c3.js -->
 		<script src="javascripts/d3.v3.min.js" charset="utf-8"></script>
@@ -39,8 +41,13 @@
 	<div class="container port" id="title">
 		<br><br><br>
     	<div id="chart"></div>
-    	<br>
+    	
     	<div>Ports Traffic</div>
+    	<br>
+    	<div id="chart2"></div>
+    	<div>Source of Traffic</div>
+
+    	
     </div>
 
   	</body>

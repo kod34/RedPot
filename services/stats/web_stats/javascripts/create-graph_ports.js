@@ -27,7 +27,7 @@ function foo(arr) {
 function createGraph(data) {
 	var ips = [];
 	for (var i = 0; i < data.length-1; i++) {
-		ips.push(data[i][2])
+		ips.push(data[i][4])
 	}
 
 	var Arr=[];
@@ -45,7 +45,42 @@ function createGraph(data) {
 	        onclick: function (d, i) { console.log("onclick", d, i); },
 	        onmouseover: function (d, i) { console.log("onmouseover", d, i); },
 	        onmouseout: function (d, i) { console.log("onmouseout", d, i); }
-	    }
+	    },
+	    bindto: "#chart2"
+	});
+
+	var ttacks = [];
+	for (var i = 0; i < data.length-1; i++) {
+		ttacks.push(data[i][2])
+	}
+
+	var Att=[];
+	var k = 'Att';
+	var result = foo(ttacks);	
+	for (var i=0; i<result[0].length; i++){
+		eval(k+i+'='+'['+'result[0][i]'+','+result[1][i]+'];');
+		eval(k+'.push('+k+i+');');
+	}
+
+	var chart = c3.generate({
+		data: {
+			columns: Att,
+            type: 'bar',
+        },
+        bar: {
+        	space: 0.25,
+        },
+        axis: {
+        	x: {
+        		label: 'Attack Type',
+        		type: 'category',
+            	categories: ['']
+        	},
+        	y: {
+        		label: 'Frequency'
+        	}
+        },
+        bindto: '#chart'
 	});
 	
 
