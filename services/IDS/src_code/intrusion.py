@@ -34,8 +34,6 @@ def Port_scanner(pkt):
                 country = 'local'
             LOG_ports.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Port "+str(port)+" is catching traffic from IP "+ip_port+"\r\r\n")
             LOG_ports_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+str(port)+","+ip_port+","+country+"\n")
-            LOG_ports.flush()
-            LOG_ports_CSV.flush()
             
 def SQLintrusion(pkt):
     global old_ip
