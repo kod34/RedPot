@@ -25,7 +25,7 @@ def Port_scanner(pkt):
     ip_port = PacketStrings.attacker_ip
     if(port != ''):
         try:
-            response = requests.get("https://geolocation-db.com/json/"+ip+"&position=true").json()
+            response = requests.get("https://geolocation-db.com/json/"+ip_port+"&position=true").json()
             country = response['country_name']
         except:
             country = 'local'

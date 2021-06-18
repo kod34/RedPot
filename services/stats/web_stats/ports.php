@@ -40,6 +40,7 @@
 	<div class="container">
 		<br><br><br>
 		<div id="chart3"></div>
+		<div id="title">
     	<div style="margin-left: 48%;">Traffic Frequency</div>
     	<br>
     	<div class="port" >
@@ -48,6 +49,7 @@
     	<br>
     	<div id="chart2"></div>
     	<div>Source of Traffic</div>
+		</div>
     	</div>
 
     	

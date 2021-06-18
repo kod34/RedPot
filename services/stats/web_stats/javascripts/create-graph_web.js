@@ -8,7 +8,7 @@ function parseData(createGraph) {
 }
 
 var k = 'Arr';
-var k = 'Att';
+var c = 'Att';
 
 function foo(arr) {
 	  var a = [],
@@ -94,8 +94,8 @@ function createGraph(data) {
 
 	var result = foo(ttacks);
 	for (var i=0; i<result[0].length; i++){
-		eval(k+i+'='+'['+'result[0][i]'+','+result[1][i]+'];');
-		eval(k+'.push('+k+i+');');
+		eval(c+i+'='+'['+'result[0][i]'+','+result[1][i]+'];');
+		eval(c+'.push('+c+i+');');
 	}
 
 
