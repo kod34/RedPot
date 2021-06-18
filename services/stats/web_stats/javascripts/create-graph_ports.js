@@ -41,10 +41,10 @@ function createGraph(data) {
 
 	for (var i = 0; i < data.length-1; i++) {
 		if (data[i][4] != 'local' && ports.indexOf(data[i][2]) !== -1){
-			ips.push(data[i][4]);
 			ttacks.push(data[i][2]);
 		}
 		if (data[i][4] != 'local'){
+			ips.push(data[i][4]);
 			dates.push(data[i][0]);
 		}
 	}
