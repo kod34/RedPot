@@ -1,7 +1,6 @@
 from threading import Thread
 from scapy.all import *
 import logging
-import json
 from PacketStrings import *
 from intrusion import *
 
@@ -26,17 +25,22 @@ class Sniffer(Thread):
         logMessage = datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"\r\n"+packetString(pkt)
         logging.warning(logMessage)
 
+        #log Ports targeted
+        Port_scanner(pkt)
+
         #log SQL injection attacks
         SQLintrusion(pkt)
 
         #log XSS attacks
         XSSintrusion(pkt)
 
-        #log Ports targeted
-        Port_scanner(pkt)
-
         #log DOS attack
         Flood(pkt)
+
+        LOG.flush()
+        LOG_CSV.flush()
+        LOG_ports_CSV.flush()
+        LOG_ports.flush()
 
 
     def run(self):

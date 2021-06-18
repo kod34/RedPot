@@ -28,6 +28,16 @@
   		</div>
   		</div>
 
+  		<div class="container-fluid">  
+  			<div class="row home">
+     			<div class="col-md-12 splash">
+              		<div class="intro">
+                  		<h1>Welcome To RedPot</h1>
+              		</div>
+      			</div>
+  			</div>
+		</div>
+
   	</body>
 
 </html>

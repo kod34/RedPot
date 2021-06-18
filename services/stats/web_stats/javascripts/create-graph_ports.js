@@ -24,21 +24,28 @@ function foo(arr) {
 	  return [a, b];
 	}
 
-var ips = [];
-var ttacks = [];
-var Arr=[];
+
 var k = 'Arr';
-var Att=[];
 var k2 = 'Att';
 var ports = ['21', '22', '23', '25', '42', '53', '80', '88', '110', '119', '135', '137', '138', '138', '143', '443', '465', '993', '995', '1025', '3306'];
-
 	
 function createGraph(data) {
+
+	var ips = [];
+	var dates = [];
+	var ttacks = [];
+	var Arr=[];
+	var Att= [];
+	var Arrx = ['x'];
+	var Arry = ['Traffic'];
 
 	for (var i = 0; i < data.length-1; i++) {
 		if (data[i][4] != 'local' && ports.indexOf(data[i][2]) !== -1){
 			ips.push(data[i][4]);
 			ttacks.push(data[i][2]);
+		}
+		if (data[i][4] != 'local'){
+			dates.push(data[i][0]);
 		}
 	}
 
@@ -85,6 +92,41 @@ function createGraph(data) {
         	}
         },
         bindto: '#chart'
+	});
+
+	var result = foo(dates);
+
+	for (var i = 0; i < result[0].length; i++){
+		Arrx.push(result[0][i]);
+		Arry.push(result[1][i]);
+	}
+
+	var chart = c3.generate({
+		size: {
+			width: 1050
+		},
+		data: {
+			x: 'x',
+			xFormat: '%d-%m-%Y',
+			columns: [Arrx,Arry]
+		},
+	    axis: {
+	        x: {
+	        	label: 'Date',
+	            type: 'timeseries',
+	            tick: {
+	                format: '%d-%m-%Y'
+	            }
+	        },
+	        y: {
+	        	label: 'Frequency'
+	        }
+	    },
+	    zoom: {
+	    	enabled: true
+	    },
+
+	    bindto: '#chart3'
 	});
 	
 

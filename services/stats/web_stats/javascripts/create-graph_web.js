@@ -7,6 +7,9 @@ function parseData(createGraph) {
 	});
 }
 
+var k = 'Arr';
+var k = 'Att';
+
 function foo(arr) {
 	  var a = [],
 	    b = [],
@@ -26,12 +29,20 @@ function foo(arr) {
 
 function createGraph(data) {
 	var ips = [];
+	var dates = [];
+	var Arrx = ['x'];
+	var Arry = ['Attacks'];
+	var ttacks = [];
+	var Att=[];
+	var Arr=[];
+
 	for (var i = 0; i < data.length-1; i++) {
-		ips.push(data[i][4])
+		ips.push(data[i][4]);
+		dates.push(data[i][0]);
+		ttacks.push(data[i][2]);
 	}
 
-	var Arr=[];
-	var k = 'Arr';
+
 	var result = foo(ips);	
 	for (var i=0; i<result[0].length; i++){
 		eval(k+i+'='+'['+'result[0][i]'+','+result[1][i]+'];');
@@ -48,15 +59,8 @@ function createGraph(data) {
 	    }
 	});
 
-	var dates = [];
-	for (var i = 0; i < data.length-1; i++) {
-		dates.push(data[i][0])
-	}
 
 	var result = foo(dates);	
-
-	var Arrx = ['x'];
-	var Arry = ['Attacks'];
 
 	for (var i = 0; i < result[0].length; i++){
 		Arrx.push(result[0][i]);
@@ -88,14 +92,7 @@ function createGraph(data) {
 	    bindto: '#chart2'
 	});
 
-	var ttacks = [];
-	for (var i = 0; i < data.length-1; i++) {
-		ttacks.push(data[i][2])
-	}
-
-	var Att=[];
-	var k = 'Att';
-	var result = foo(ttacks);	
+	var result = foo(ttacks);
 	for (var i=0; i<result[0].length; i++){
 		eval(k+i+'='+'['+'result[0][i]'+','+result[1][i]+'];');
 		eval(k+'.push('+k+i+');');

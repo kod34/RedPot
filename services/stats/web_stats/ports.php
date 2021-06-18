@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 	<head>
@@ -38,14 +37,18 @@
 
 	<br><br>
     	
-	<div class="container port" id="title">
+	<div class="container">
 		<br><br><br>
+		<div id="chart3"></div>
+    	<div style="margin-left: 48%;">Traffic Frequency</div>
+    	<br>
+    	<div class="port" >
     	<div id="chart"></div>
-    	
-    	<div>Ports Traffic</div>
+    	<div>Ports</div>
     	<br>
     	<div id="chart2"></div>
     	<div>Source of Traffic</div>
+    	</div>
 
     	
     </div>

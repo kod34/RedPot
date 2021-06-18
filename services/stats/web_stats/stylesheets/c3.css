@@ -169,6 +169,7 @@
 
 
 .vertical-menu {
+  font-family: Cambria,Georgia,serif; 
   text-align: center;
   padding-top: 5%;
   width:15%;
@@ -201,7 +202,7 @@
 }
 
 #title{
-  font-family: 'Times New Roman', serif;
+  font-family: Copperplate,Copperplate Gothic Light,fantasy; 
   text-align: center;
   font-size: 20px;
   color: #7F0606;
@@ -236,4 +237,25 @@ body{
   background-image: url('../images/bg5.jpg');
   background-size: cover;
   background-repeat: no-repeat;
+}
+
+
+.splash {
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center; /* align horizontal */
+    align-items: center; /* align vertical */
+}
+
+.intro {
+    padding-left: 350px;
+    padding-top: 200px;
+}
+
+.splash h1 {
+  font-family: monaco,Consolas,Lucida Console,monospace; 
+  color : #FF5733;
+  font-size:  50px;
 }

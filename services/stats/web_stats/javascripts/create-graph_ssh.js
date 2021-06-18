@@ -7,6 +7,8 @@ function parseData(createGraph) {
 	});
 }
 
+var k = 'Arr';
+
 function foo(arr) {
 	  var a = [],
 	    b = [],
@@ -25,13 +27,19 @@ function foo(arr) {
 	}
 
 function createGraph(data) {
+
+	var Arrx = ['x'];
+	var Arry = ['Attacks'];
+	var ArrFinal = [];
+	var dates = [];
+	var Arr=[];
 	var ips = [];
+
 	for (var i = 0; i < data.length-1; i++) {
-		ips.push(data[i][3])
+		ips.push(data[i][3]);
+		dates.push(data[i][0]);
 	}
 
-	var Arr=[];
-	var k = 'Arr';
 	var result = foo(ips);	
 	for (var i=0; i<result[0].length; i++){
 		eval(k+i+'='+'['+'result[0][i]'+','+result[1][i]+'];');
@@ -48,16 +56,7 @@ function createGraph(data) {
 	    }
 	});
 
-	var dates = [];
-	for (var i = 0; i < data.length-1; i++) {
-		dates.push(data[i][0])
-	}
-
 	var result = foo(dates);	
-
-	var Arrx = ['x'];
-	var Arry = ['Attacks'];
-	var ArrFinal = [];
 
 	for (var i = 0; i < result[0].length; i++){
 		Arrx.push(result[0][i]);
