@@ -23,8 +23,9 @@ country = ''
 
 def location():
     global country
+    ip = PacketStrings.attacker_ip
     try:
-         response = requests.get("https://geolocation-db.com/json/"+ip_port+"&position=true").json()
+         response = requests.get("https://geolocation-db.com/json/"+ip+"&position=true").json()
          country = response['country_name']
     except:
         country = 'local'
