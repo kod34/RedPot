@@ -83,7 +83,7 @@ function createGraph(data) {
         },
         axis: {
         	x: {
-        		label: 'Attack Type',
+        		label: 'Port Number',
         		type: 'category',
             	categories: ['']
         	},

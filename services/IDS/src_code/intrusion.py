@@ -18,27 +18,31 @@ old_load = ""
 ip_dict = {}
 fmt = '%Y-%m-%d %H:%M:%S'
 tstamp1 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
+country = ''
 
+
+def location():
+    global country
+    try:
+         response = requests.get("https://geolocation-db.com/json/"+ip_port+"&position=true").json()
+         country = response['country_name']
+    except:
+        country = 'local'
+    finally:
+        if(country == 'Not found'):
+            country = 'local'
 
 def Port_scanner(pkt):
+    global country
     port = PacketStrings.target_port
     ip_port = PacketStrings.attacker_ip
     if(port != ''):
-        try:
-            response = requests.get("https://geolocation-db.com/json/"+ip_port+"&position=true").json()
-            country = response['country_name']
-        except:
-            country = 'local'
-        finally:
-            if(country == 'Not found'):
-                country = 'local'
-            LOG_ports.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Port "+str(port)+" is catching traffic from IP "+ip_port+"\r\r\n")
-            LOG_ports_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+str(port)+","+ip_port+","+country+"\n")
+        LOG_ports.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Port "+str(port)+" is catching traffic from IP "+ip_port+"\r\r\n")
+        LOG_ports_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+str(port)+","+ip_port+","+country+"\n")
             
 def SQLintrusion(pkt):
     global old_ip
     global old_load
-    port = PacketStrings.target_port
     ip_SQL = PacketStrings.attacker_ip
     sus = PacketStrings.tcp_payload
     new_ip = ip_SQL
@@ -46,24 +50,15 @@ def SQLintrusion(pkt):
         for x in SQLinjections:
             if ((old_ip != new_ip or old_load != x) and conf.route.route("0.0.0.0")[2] != ip_SQL and urllib.parse.quote_plus(x) in sus):
                 LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = SQLinjection | IP = "+ip_SQL+" | Payload = "+str(x)+"\r\r\n")
-                try:
-                    response = requests.get("https://geolocation-db.com/json/"+ip_SQL+"&position=true").json()
-                    country = response['country_name']
-                except:
-                    country = 'local'
-                finally:
-                    if(country == 'Not found'):
-                        country = 'local'
-                    LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",SQLinjection,"+ip_SQL+","+country+"\n")
-                    old_ip = ip_SQL
-                    old_load = x
+                LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",SQLinjection,"+ip_SQL+","+country+"\n")
+                old_ip = ip_SQL
+                old_load = x
 
 
 
 def XSSintrusion(pkt):
     global old_ip
     global old_load
-    port = PacketStrings.target_port
     ip_XSS = PacketStrings.attacker_ip
     sus = PacketStrings.tcp_payload
     new_ip = ip_XSS
@@ -71,17 +66,9 @@ def XSSintrusion(pkt):
         for x in XSSinjections:
             if ((old_ip != new_ip or old_load != x) and conf.route.route("0.0.0.0")[2] != ip_XSS and urllib.parse.quote_plus(x) in sus):
                 LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = XSS | IP = "+ip_XSS+" | Payload = "+str(x)+"\r\r\n")
-                try:
-                    response = requests.get("https://geolocation-db.com/json/"+ip_XSS+"&position=true").json()
-                    country = response['country_name']
-                except:
-                    country = 'local'
-                finally:
-                    if(country == 'Not found'):
-                        country = 'local'
-                    LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",XSS,"+ip_XSS+","+country+"\n")
-                    old_ip = ip_XSS
-                    old_load = x
+                LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",XSS,"+ip_XSS+","+country+"\n")
+                old_ip = ip_XSS
+                old_load = x
 
 def Flood(pkt):
     global ip_dict
@@ -103,15 +90,7 @@ def Flood(pkt):
                 ip_position = val_list.index(x)
                 dos_ip = key_list[ip_position]
                 LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = Flood Attack | IP = "+dos_ip+"\r\r\n")
-                try:
-                    response = requests.get("https://geolocation-db.com/json/"+ip+"&position=true").json()
-                    country = response['country_name']
-                except:
-                    country = 'local'
-                finally:
-                    if(country == 'Not found'):
-                        country = 'local'
-                    LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",TCP/UDP Flood,"+dos_ip+","+country+"\n")
+                LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",TCP/UDP Flood,"+dos_ip+","+country+"\n")
 
         ip_dict = {}
         tstamp1 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)

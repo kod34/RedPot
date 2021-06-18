@@ -25,6 +25,9 @@ class Sniffer(Thread):
         logMessage = datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"\r\n"+packetString(pkt)
         logging.warning(logMessage)
 
+        #get location
+        location()
+
         #log Ports targeted
         Port_scanner(pkt)
 
