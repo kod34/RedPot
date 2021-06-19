@@ -24,19 +24,20 @@ class Sniffer(Thread):
         logMessage = datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"\r\n"+packetString(pkt)
         logging.warning(logMessage)
 
-        #get location
-        location()
+        #log Traffic
+        traffic()
 
         #log Ports targeted
-        Port_scanner(pkt)
+        Port_scanner()
 
-        #log intrusion attacks
-        SQLintrusion(pkt)
+        #log SQL injection attacks
+        SQLintrusion()
 
-        XSSintrusion(pkt)
+        #log XSS attacks
+        XSSintrusion()
 
         #log DOS attack
-        Flood(pkt)
+        Flood()
 
         LOG.flush()
         LOG_CSV.flush()
