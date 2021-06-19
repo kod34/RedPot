@@ -25,7 +25,7 @@ echo [+] Starting Fake-SSH Honeypot...
 systemctl restart fakessh
 sleep 1
 echo [+] Done
-echo [*] You can view logs at: /redpot/logs/SSH/fakessh.log
+echo [*] Log Files: /redpot/logs/SSH/
 echo -------------------------------------------------------------------
 echo ‎‎‎‎'                      'Starting the RedPot IDS
 echo -------------------------------------------------------------------
@@ -36,5 +36,4 @@ echo [+] Starting redpot_ids service...
 systemctl restart redpot_ids
 sleep 1
 echo [+] Done
-echo [*] You can view Packet logs at: /redpot/logs/IDS/Redpot_ids.log
-echo [*] You can view Intrusion logs at: /redpot/logs/IDS/intrusions.logs
+echo [*] Log Files: /redpot/logs/IDS/
