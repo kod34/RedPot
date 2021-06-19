@@ -18,7 +18,7 @@ LOG_traffic_CSV = open("/var/www/web_stats/csv_files/traffic.csv", "a")
 ip_dict = {}
 fmt = '%Y-%m-%d %H:%M:%S'
 tstamp1 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
-port_list = [21, 22, 23, 25, 42, 53, 80, 88, 110, 119, 135, 137, 138, 138, 143, 443, 465, 993, 995, 1025, 3306];
+port_list = [21, 22, 23, 25, 42, 53, 80, 88, 110, 119, 135, 137, 138, 138, 143, 443, 465, 993, 995, 1025, 3306]
 k2 = datetime.strptime(datetime.now().strftime("2018-06-06 15:15:15"), fmt)
 
 def location():

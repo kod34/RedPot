@@ -40,7 +40,7 @@ function createGraph(data) {
 	var Arry = ['Traffic'];
 
 	for (var i = 0; i < data.length-1; i++) {
-		if (ports.indexOf(data[i][2]) !== -1){
+		if (ports.indexOf(data[i][2]) !== -1 && data[i][4] !== 'local'){
 			ttacks.push(data[i][2]);
 			ips.push(data[i][4]);
 			dates.push(data[i][0]);
@@ -101,8 +101,6 @@ function createGraph(data) {
 		Arrx.push(result[0][i]);
 		Arry.push(result[1][i]);
 	}
-
-	console.log(Arrx)
 
 	var chart = c3.generate({
 		size: {
