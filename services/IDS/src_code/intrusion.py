@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 import urllib.parse
 from scapy.all import *
-import requests
+from urllib.request import urlopen
 
 SQLinjections = json.loads(open('/redpot/IDS/src_code/attacks/SQLinjections.json').read())
 XSSinjections = json.loads(open('/redpot/IDS/src_code/attacks/XSSinjections.json').read(), strict=False)
@@ -13,33 +13,33 @@ LOG = open("/redpot/logs/IDS/intrusions.log", "a")
 LOG_ports = open("/redpot/logs/IDS/ports.log", "a")
 LOG_CSV = open("/var/www/web_stats/csv_files/intrusions.csv", "a")
 LOG_ports_CSV = open("/var/www/web_stats/csv_files/ports.csv", "a")
-old_ip = ""
-old_load = ""
 ip_dict = {}
 fmt = '%Y-%m-%d %H:%M:%S'
 tstamp1 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
-country = ''
+rem_load = ''
+rem_ip = ''
+old_ip = ''
+new_ip = ''
 
 
 def location():
     global country
     ip = PacketStrings.attacker_ip
     try:
-         response = requests.get("https://geolocation-db.com/json/"+ip+"&position=true").json()
-         country = response['country_name']
+        url = 'http://ipinfo.io/'+ip+'/json'
+        response = urlopen(url)
+        data = json.load(response)
+        country = data['country']
     except:
         country = 'local'
-    finally:
-        if(country == 'Not found'):
-            country = 'local'
 
 def Port_scanner(pkt):
     global country
     port = PacketStrings.target_port
-    ip_port = PacketStrings.attacker_ip
+    ip = PacketStrings.attacker_ip
     if(port != ''):
-        LOG_ports.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Port "+str(port)+" is catching traffic from IP "+ip_port+"\r\r\n")
-        LOG_ports_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+str(port)+","+ip_port+","+country+"\n")
+        LOG_ports.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Port "+str(port)+" is catching traffic from IP "+ip+"\r\r\n")
+        LOG_ports_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+str(port)+","+ip+","+country+"\n")
             
 def SQLintrusion(pkt):
     global old_ip
@@ -70,6 +70,7 @@ def XSSintrusion(pkt):
                 LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",XSS,"+ip_XSS+","+country+"\n")
                 old_ip = ip_XSS
                 old_load = x
+
 
 def Flood(pkt):
     global ip_dict

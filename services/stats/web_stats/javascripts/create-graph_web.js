@@ -88,6 +88,9 @@ function createGraph(data) {
 	        	label: 'Frequency'
 	        }
 	    },
+	    zoom: {
+	    	enabled: true
+	    },
 
 	    bindto: '#chart2'
 	});
@@ -117,6 +120,9 @@ function createGraph(data) {
         		label: 'Frequency'
         	}
         },
+        zoom: {
+	    	enabled: true
+	    },
         bindto: '#chart3'
 	});
 

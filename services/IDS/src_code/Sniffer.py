@@ -1,7 +1,6 @@
 from threading import Thread
 from scapy.all import *
 import logging
-from PacketStrings import *
 from intrusion import *
 
 
@@ -31,10 +30,9 @@ class Sniffer(Thread):
         #log Ports targeted
         Port_scanner(pkt)
 
-        #log SQL injection attacks
+        #log intrusion attacks
         SQLintrusion(pkt)
 
-        #log XSS attacks
         XSSintrusion(pkt)
 
         #log DOS attack

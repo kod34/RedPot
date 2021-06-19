@@ -40,13 +40,11 @@ function createGraph(data) {
 	var Arry = ['Traffic'];
 
 	for (var i = 0; i < data.length-1; i++) {
-		if (data[i][4] != 'local' && ports.indexOf(data[i][2]) !== -1){
+		if (ports.indexOf(data[i][2]) !== -1){
 			ttacks.push(data[i][2]);
 		}
-		if (data[i][4] != 'local'){
-			ips.push(data[i][4]);
-			dates.push(data[i][0]);
-		}
+		ips.push(data[i][4]);
+		dates.push(data[i][0]);
 	}
 
 	var result = foo(ips);	
@@ -91,6 +89,9 @@ function createGraph(data) {
         		label: 'Frequency'
         	}
         },
+        zoom: {
+	    	enabled: true
+	    },
         bindto: '#chart'
 	});
 
@@ -100,6 +101,8 @@ function createGraph(data) {
 		Arrx.push(result[0][i]);
 		Arry.push(result[1][i]);
 	}
+
+	console.log(Arrx)
 
 	var chart = c3.generate({
 		size: {

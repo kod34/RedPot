@@ -25,7 +25,7 @@ def ipString(ip):
     out += "\t TTL: " + str(ip.ttl) + "\n"
     out += "\t Protocol: " + str(ip.proto) + "\n"
     out += "\t Header Checksum: " + str(ip.chksum) + "\n"
-    out += "\t Source: " + str(ip.src) + "\n"
+    out += "\t Source: " + ip.src + "\n"
     out += "\t Destination: " + str(ip.dst) + "\n"
     if (ip.ihl > 5):
         out += "\t Options: " + str(ip.options) + "\n"
@@ -63,11 +63,11 @@ def udpString(udp):
 
 def payloadString(pkt):
     if (pkt.payload):
-        data = str(pkt.payload)
+        data = raw(pkt.payload)
         lines = data.splitlines()
         s = ""
         for line in lines:
-            s += "\t" + line + "\n"
+            s += "\t" + str(line) + "\n"
         out = s
         return out
     else:

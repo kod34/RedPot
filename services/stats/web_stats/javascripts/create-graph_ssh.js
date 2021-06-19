@@ -84,6 +84,9 @@ function createGraph(data) {
 	        	label: 'Frequency'
 	        }
 	    },
+	    zoom: {
+	    	enabled: true
+	    },
 
 	    bindto: '#chart2'
 	});
