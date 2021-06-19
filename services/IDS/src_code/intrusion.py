@@ -11,16 +11,15 @@ XSSinjections = json.loads(open('/redpot/IDS/src_code/attacks/XSSinjections.json
 
 LOG = open("/redpot/logs/IDS/intrusions.log", "a")
 LOG_ports = open("/redpot/logs/IDS/ports.log", "a")
+LOG_traffic = open("/redpot/logs/IDS/traffic.log", "a")
 LOG_CSV = open("/var/www/web_stats/csv_files/intrusions.csv", "a")
 LOG_ports_CSV = open("/var/www/web_stats/csv_files/ports.csv", "a")
+LOG_traffic_CSV = open("/var/www/web_stats/csv_files/traffic.csv", "a")
 ip_dict = {}
 fmt = '%Y-%m-%d %H:%M:%S'
 tstamp1 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
-rem_load = ''
-rem_ip = ''
-old_ip = ''
-new_ip = ''
-
+port_list = [21, 22, 23, 25, 42, 53, 80, 88, 110, 119, 135, 137, 138, 138, 143, 443, 465, 993, 995, 1025, 3306];
+k2 = datetime.strptime(datetime.now().strftime("2018-06-06 15:15:15"), fmt)
 
 def location():
     global country
@@ -33,46 +32,57 @@ def location():
     except:
         country = 'local'
 
-def Port_scanner(pkt):
-    global country
+def traffic():
     port = PacketStrings.target_port
     ip = PacketStrings.attacker_ip
     if(port != ''):
-        LOG_ports.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Port "+str(port)+" is catching traffic from IP "+ip+"\r\r\n")
+        LOG_traffic.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Port "+str(port)+" is catching traffic from IP "+ip+"\r\r\n")
+        LOG_traffic_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+str(port)+","+ip+"\n")
+
+def Port_scanner():
+    port = PacketStrings.target_port
+    ip = PacketStrings.attacker_ip
+    if(port in port_list):
+        location()
+        LOG_ports.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Port "+str(port)+" is targeted by IP "+ip+"\r\r\n")
         LOG_ports_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+str(port)+","+ip+","+country+"\n")
             
-def SQLintrusion(pkt):
-    global old_ip
-    global old_load
+def SQLintrusion():
+    global k2
+    Port = PacketStrings.target_port
     ip_SQL = PacketStrings.attacker_ip
     sus = PacketStrings.tcp_payload
-    new_ip = ip_SQL
-    if (len(sus) != 0):
+    k1 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
+    diff = k1-k2
+    diff_sec = int(round(diff.total_seconds()))
+    if (len(sus) != 0 and conf.route.route("0.0.0.0")[2] != ip_SQL and (Port==80 or Port ==3306) and diff_sec > 2):
         for x in SQLinjections:
-            if ((old_ip != new_ip or old_load != x) and conf.route.route("0.0.0.0")[2] != ip_SQL and urllib.parse.quote_plus(x) in sus):
+            if (urllib.parse.quote_plus(x) in sus):
+                k2 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
+                location()
                 LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = SQLinjection | IP = "+ip_SQL+" | Payload = "+str(x)+"\r\r\n")
                 LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",SQLinjection,"+ip_SQL+","+country+"\n")
-                old_ip = ip_SQL
-                old_load = x
+                break
 
-
-
-def XSSintrusion(pkt):
-    global old_ip
-    global old_load
+def XSSintrusion():
+    global k2
     ip_XSS = PacketStrings.attacker_ip
     sus = PacketStrings.tcp_payload
-    new_ip = ip_XSS
-    if (len(sus) != 0):
+    Port = PacketStrings.target_port
+    k1 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
+    diff = k1-k2
+    diff_sec = int(round(diff.total_seconds()))
+    if (len(sus) != 0 and conf.route.route("0.0.0.0")[2] != ip_XSS and (Port==80 or Port ==3306) and diff_sec > 2):
         for x in XSSinjections:
-            if ((old_ip != new_ip or old_load != x) and conf.route.route("0.0.0.0")[2] != ip_XSS and urllib.parse.quote_plus(x) in sus):
+            if (urllib.parse.quote_plus(x) in sus):
+                k2 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
+                location()
                 LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = XSS | IP = "+ip_XSS+" | Payload = "+str(x)+"\r\r\n")
                 LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",XSS,"+ip_XSS+","+country+"\n")
-                old_ip = ip_XSS
-                old_load = x
+                break
 
 
-def Flood(pkt):
+def Flood():
     global ip_dict
     global tstamp1
     tstamp2 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
@@ -91,10 +101,9 @@ def Flood(pkt):
             if (x > threshold): 
                 ip_position = val_list.index(x)
                 dos_ip = key_list[ip_position]
+                location()
                 LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = Flood Attack | IP = "+dos_ip+"\r\r\n")
                 LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",TCP/UDP Flood,"+dos_ip+","+country+"\n")
-
         ip_dict = {}
         tstamp1 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
-        
         

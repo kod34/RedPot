@@ -15,15 +15,15 @@
 		<script src="javascripts/papaparse.min.js"></script>
 
 		<!-- Load script -->
-		<script src="javascripts/create-graph_ports.js"></script>
+		<script src="javascripts/create-graph_traffic.js"></script>
   	</head>
 
   	<body onLoad="Live()">
 
   		<div class="vertical-menu">
 		  <a href="index.php">Home</a>
-		  <a href="traffic.php">Traffic</a>
-		  <a href="ports.php" class="active"> Ports </a>
+		  <a href="traffic.php" class="active">Traffic</a>
+		  <a href="ports.php"> Ports </a>
 		  <a href="ssh_intrusions.php"> SSH </a>
 		  <a href="web_intrusions.php"> Web Instrusions </a>
 		</div>
@@ -40,16 +40,10 @@
     	
 	<div class="container">
 		<br><br><br>
-		<div id="chart3"></div>
-		<div id="title">
-    	<div style="margin-left: 48%;">Ports Traffic</div>
-    	<br>
-    	<div class="port" >
+    	<div>
     	<div id="chart"></div>
-    	<div>Ports Frequency</div>
+    	<div id="title" style="margin-left: 48%;">Traffic Frequency</div>
     	<br>
-    	<div id="chart2"></div>
-    	<div>Port Traffic Location</div>
 		</div>
     	</div>
 

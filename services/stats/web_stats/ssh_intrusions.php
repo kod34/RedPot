@@ -27,6 +27,7 @@
 
 		<div class="vertical-menu">
 		  <a href="index.php">Home</a>
+		  <a href="traffic.php">Traffic</a>
 		  <a href="ports.php"> Ports </a>
 		  <a href="ssh_intrusions.php" class="active"> SSH </a>
 		  <a href="web_intrusions.php"> Web Instrusions </a>

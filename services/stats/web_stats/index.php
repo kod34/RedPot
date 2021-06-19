@@ -15,6 +15,7 @@
 
   		<div class="vertical-menu">
 		  <a href="index.php" class="active">Home</a>
+      <a href="traffic.php">Traffic</a>
 		  <a href="ports.php"> Ports </a>
 		  <a href="ssh_intrusions.php"> SSH </a>
 		  <a href="web_intrusions.php"> Web Instrusions </a>
