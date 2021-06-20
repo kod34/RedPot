@@ -39,6 +39,9 @@ class Sniffer(Thread):
         #log DOS attack
         Flood()
 
+        #log SSH bruteforce
+        SSH_Flood()
+
         #flush log files
         LOG.flush()
         LOG_CSV.flush()
