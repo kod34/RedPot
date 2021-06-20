@@ -31,15 +31,19 @@ k2 = datetime.strptime(datetime.now().strftime("2018-06-06 15:15:15"), fmt)
     # except:
     #     country = 'local'
 
-#ip _api (45 per minute)
+#getlocation-db
 def location1():
     global country
     ip = PacketStrings.attacker_ip
-    try:
-        response = requests.get("http://ip-api.com/json/"+ip).json()
-        country = response['country']
+    try: 
+        response = requests.get("https://geolocation-db.com/json/"+ip+"&position=true").json()
+        country = response['country_name']
     except:
         country = 'local'
+    finally:
+        if(country == 'Not found'):
+            country = 'local'
+
 
 #geo plugin (120 per minute)
 def location2():
@@ -119,7 +123,7 @@ def Flood():
             if (x > threshold): 
                 ip_position = val_list.index(x)
                 dos_ip = key_list[ip_position]
-                location()
+                location1()
                 LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = Flood Attack | IP = "+dos_ip+"\r\r\n")
                 LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",TCP/UDP Flood,"+dos_ip+","+country+"\n")
         ip_dict = {}

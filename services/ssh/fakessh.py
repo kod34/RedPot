@@ -116,22 +116,11 @@ def handle_connection(client, addr):
 
     LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"  [!] Connection from " + addr[0] + "\n")
     
-    # Payed service    
-    # try:
-    #     url = 'http://ipinfo.io/'+addr[0]+'/json'
-    #     response = urlopen(url)
-    #     data = json.load(response)
-    #     country = data['country']
-    # except:
-    #     country = 'local'
-    # finally:
-    #     LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+addr[0]+","+country+"\n")
-    #     LOG_CSV.flush()
-
-    #getlocation-db
-    response = requests.get("https://geolocation-db.com/json/"+addr[0]+"&position=true").json()
-    country = response['country_name']
-    if(country == 'Not found'):
+    #ip _api (45 per minute)
+    try:
+        response = requests.get("http://ip-api.com/json/"+addr[0]).json()
+        country = response['country']
+    except:
         country = 'local'
     LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+addr[0]+","+country+"\n")
     LOG_CSV.flush()
