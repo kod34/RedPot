@@ -116,7 +116,7 @@ def handle_connection(client, addr):
 
     LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"  [!] Connection from " + addr[0] + "\n")
     
-    #ip _api (45 per minute)
+    #ip_api (45 per minute)
     try:
         response = requests.get("http://ip-api.com/json/"+addr[0]).json()
         country = response['country']

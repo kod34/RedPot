@@ -23,6 +23,8 @@ class Sniffer(Thread):
   
         logMessage = datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"\r\n"+packetString(pkt)
         logging.warning(logMessage)
+        #To update geolocation database
+        lease()
 
         #log Traffic
         traffic()
@@ -49,7 +51,8 @@ class Sniffer(Thread):
         LOG_ports.flush()
         LOG_traffic_CSV.flush()
         LOG_traffic.flush()
-
+        lease_dates.flush()
 
     def run(self):
         sniff(prn=self.inPacket, lfilter=lambda pkt: pkt[Ether].src != Ether().src, store=0, stop_filter=self.stopfilter)
+
