@@ -39,10 +39,13 @@ class Sniffer(Thread):
         #log DOS attack
         Flood()
 
+        #flush log files
         LOG.flush()
         LOG_CSV.flush()
         LOG_ports_CSV.flush()
         LOG_ports.flush()
+        LOG_traffic_CSV.flush()
+        LOG_traffic.flush()
 
 
     def run(self):

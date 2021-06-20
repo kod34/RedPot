@@ -7,9 +7,9 @@ import sys
 import traceback
 import paramiko
 import time
-import json
 from datetime import datetime
-from urllib.request import urlopen
+import requests
+# from urllib.request import urlopen
 
 
 LOG = open("/redpot/logs/SSH/fakessh.log", "a")
@@ -116,29 +116,26 @@ def handle_connection(client, addr):
 
     LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"  [!] Connection from " + addr[0] + "\n")
     
-    # NOT OPTIMAL BUT MAY BE USEFUL
-        
+    # Payed service    
     # try:
-    #     response = requests.get("https://geolocation-db.com/json/"+addr[0]+"&position=true").json()
-    #     country = response['country_name']
+    #     url = 'http://ipinfo.io/'+addr[0]+'/json'
+    #     response = urlopen(url)
+    #     data = json.load(response)
+    #     country = data['country']
     # except:
     #     country = 'local'
     # finally:
-    #     if(country == 'Not found'):
-    #         country = 'local'
     #     LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+addr[0]+","+country+"\n")
     #     LOG_CSV.flush()
 
-    try:
-        url = 'http://ipinfo.io/'+addr[0]+'/json'
-        response = urlopen(url)
-        data = json.load(response)
-        country = data['country']
-    except:
+    #getlocation-db
+    response = requests.get("https://geolocation-db.com/json/"+addr[0]+"&position=true").json()
+    country = response['country_name']
+    if(country == 'Not found'):
         country = 'local'
-    finally:
-        LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+addr[0]+","+country+"\n")
-        LOG_CSV.flush()
+    LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+addr[0]+","+country+"\n")
+    LOG_CSV.flush()
+
         
     try:
         transport = paramiko.Transport(client)

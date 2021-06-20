@@ -4,7 +4,8 @@ import json
 from datetime import datetime
 import urllib.parse
 from scapy.all import *
-from urllib.request import urlopen
+import requests
+# from urllib.request import urlopen
 
 SQLinjections = json.loads(open('/redpot/IDS/src_code/attacks/SQLinjections.json').read())
 XSSinjections = json.loads(open('/redpot/IDS/src_code/attacks/XSSinjections.json').read(), strict=False)
@@ -21,15 +22,32 @@ tstamp1 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
 port_list = [21, 22, 23, 25, 42, 53, 80, 88, 110, 119, 135, 137, 138, 138, 143, 443, 465, 993, 995, 1025, 3306]
 k2 = datetime.strptime(datetime.now().strftime("2018-06-06 15:15:15"), fmt)
 
-def location():
+    #  Paid service
+    #  try:
+    #     url = 'http://ipinfo.io/'+ip+'/json'
+    #     response = urlopen(url)
+    #     data = json.load(response)
+    #     country = data['country']
+    # except:
+    #     country = 'local'
+
+#ip _api (45 per minute)
+def location1():
     global country
     ip = PacketStrings.attacker_ip
     try:
-        url = 'http://ipinfo.io/'+ip+'/json'
-        response = urlopen(url)
-        data = json.load(response)
-        country = data['country']
+        response = requests.get("http://ip-api.com/json/"+ip).json()
+        country = response['country']
     except:
+        country = 'local'
+
+#geo plugin (120 per minute)
+def location2():
+    global country
+    ip = PacketStrings.attacker_ip
+    response = requests.get("http://www.geoplugin.net/json.gp?ip="+ip).json()
+    country = response['geoplugin_countryName']
+    if(country == None):
         country = 'local'
 
 def traffic():
@@ -43,7 +61,7 @@ def Port_scanner():
     port = PacketStrings.target_port
     ip = PacketStrings.attacker_ip
     if(port in port_list):
-        location()
+        location2()
         LOG_ports.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Port "+str(port)+" is targeted by IP "+ip+"\r\r\n")
         LOG_ports_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+str(port)+","+ip+","+country+"\n")
             
@@ -59,7 +77,7 @@ def SQLintrusion():
         for x in SQLinjections:
             if (urllib.parse.quote_plus(x) in sus):
                 k2 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
-                location()
+                location1()
                 LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = SQLinjection | IP = "+ip_SQL+" | Payload = "+str(x)+"\r\r\n")
                 LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",SQLinjection,"+ip_SQL+","+country+"\n")
                 break
@@ -76,7 +94,7 @@ def XSSintrusion():
         for x in XSSinjections:
             if (urllib.parse.quote_plus(x) in sus):
                 k2 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
-                location()
+                location1()
                 LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = XSS | IP = "+ip_XSS+" | Payload = "+str(x)+"\r\r\n")
                 LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",XSS,"+ip_XSS+","+country+"\n")
                 break
