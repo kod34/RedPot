@@ -40,7 +40,7 @@ function createGraph(data) {
 	var Arry = ['Traffic'];
 
 	for (var i = 0; i < data.length-1; i++) {
-		if (ports.indexOf(data[i][2]) !== -1 && data[i][4] !== 'local'){
+		if (ports.indexOf(data[i][2]) !== -1 && data[i][4] !== 'local' && data[i][4] !== 'Error'){
 			ttacks.push(data[i][2]);
 			ips.push(data[i][4]);
 			dates.push(data[i][0]);

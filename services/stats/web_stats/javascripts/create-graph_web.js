@@ -37,9 +37,11 @@ function createGraph(data) {
 	var Arr=[];
 
 	for (var i = 0; i < data.length-1; i++) {
-		ips.push(data[i][4]);
-		dates.push(data[i][0]);
-		ttacks.push(data[i][2]);
+		if (data[i][4] !== 'Error'){
+			ips.push(data[i][4]);
+			dates.push(data[i][0]);
+			ttacks.push(data[i][2]);
+		}
 	}
 
 

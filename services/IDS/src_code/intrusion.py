@@ -63,7 +63,6 @@ def location2(ip_add):
 		country = response['geoplugin_countryName']
 	except:
 		country = 'Error'
-		print(response)
 	finally:
 		if(country == None):
 			country = 'local'
@@ -101,26 +100,24 @@ def Port_scanner():
     port = PacketStrings.target_port
     ip = PacketStrings.attacker_ip
     if(port in port_list):
-    	loc_read = open("/redpot/logs/IDS/locations.csv", "r")
-    	found = False
-    	for row in loc_read:
-    		if (ip == row.split(',')[0]):
-    			country = row.split(',')[1]
-    			LOG_ports.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Port "+str(port)+" is targeted by IP "+ip+"\r\r\n")
-    			LOG_ports_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+str(port)+","+ip+","+country+"\n")
-    			found = True
-    			break
-    	if (not found):
-    		location2(ip)
-    		print(country)
-    		loc_write = open("/redpot/logs/IDS/locations.csv", "a")
-    		loc_write.write(ip+","+country+"\n")
-    		loc_write.flush()
-    		LOG_ports.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Port "+str(port)+" is targeted by IP "+ip+"\r\r\n")
-    		LOG_ports_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+str(port)+","+ip+","+country+"\n")
+        loc_read = open("/redpot/logs/IDS/locations.csv", "r")
+        found = False
+        for row in loc_read:
+            if (ip == row.split(',')[0]):
+                found = True
+                country = row.split(',')[1]
+                LOG_ports.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Port "+str(port)+" is targeted by IP "+ip+"\r\r\n")
+                LOG_ports_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+str(port)+","+ip+","+country)
+                break
+        if(not found):
+            location2(ip)
+            loc_write = open("/redpot/logs/IDS/locations.csv", "a")
+            loc_write.write(ip+","+country+"\n")
+            loc_write.flush()
+            LOG_ports.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Port "+str(port)+" is targeted by IP "+ip+"\r\r\n")
+            LOG_ports_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+str(port)+","+ip+","+country+"\n")
 
-        
-        
+
 def SQLintrusion():
     global country
     global k2
@@ -203,7 +200,7 @@ def Flood():
         if (td_sec > 60):
             key_list = list(ip_dict.keys())
             val_list = list(ip_dict.values())
-            threshold = 600
+            threshold = 500
             for x in val_list :
                 if (x > threshold):
                     ip_position = val_list.index(x)
@@ -214,4 +211,3 @@ def Flood():
             ip_dict = {}
             tstamp1 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
         
-

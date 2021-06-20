@@ -36,7 +36,7 @@ function createGraph(data) {
 	var ips = [];
 
 	for (var i = 0; i < data.length-1; i++) {
-		if(data[i][3] !== 'local'){
+		if(data[i][3] !== 'Error'){
 			ips.push(data[i][3]);
 			dates.push(data[i][0]);
 		}
