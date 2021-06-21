@@ -44,6 +44,9 @@ class Sniffer(Thread):
         #log SSH bruteforce
         SSH_Flood()
 
+        #log SQL bruteforce
+        SQL_Flood()
+
         #flush log files
         LOG.flush()
         LOG_ports.flush()

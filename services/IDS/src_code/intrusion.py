@@ -23,9 +23,11 @@ XSSinjections = json.loads(open('/redpot/IDS/src_code/attacks/XSSinjections.json
 
 ip_dict = {}
 ssh_dict = {}
+sql_dict = {}
 fmt = '%Y-%m-%d %H:%M:%S'
 tstamp1 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
 ssh_tstamp1 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
+sql_tstamp1 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
 port_list = [21, 22, 23, 25, 42, 53, 80, 88, 110, 119, 135, 137, 138, 138, 143, 443, 465, 993, 995, 1025, 3306]
 k2 = datetime.strptime(datetime.now().strftime("2018-06-06 15:15:15"), fmt)
 
@@ -185,7 +187,7 @@ def SSH_Flood():
         if (ssh_td_sec > 60):
             ssh_key_list = list(ssh_dict.keys())
             ssh_val_list = list(ssh_dict.values())
-            ssh_limit = 50
+            ssh_limit = 240
             for x in ssh_val_list :
                 if (x > ssh_limit): 
                     ssh_ip_position = ssh_val_list.index(x)
@@ -205,7 +207,7 @@ def Flood():
     ip = PacketStrings.attacker_ip
     get_country(ip)
     port = PacketStrings.target_port
-    if(port != 22):
+    if(port != 22 and port != 3306):
         if ip not in ip_dict :
             ip_dict.update({ip: 0})
         else:
@@ -226,3 +228,34 @@ def Flood():
                         LOG_CSV.flush()
             ip_dict = {}
             tstamp1 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
+
+
+def SQL_Flood():
+    global country
+    global sql_dict
+    global sql_tstamp1
+    sql_tstamp2 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
+    ip = PacketStrings.attacker_ip
+    get_country(ip)
+    port = PacketStrings.target_port
+    if(port == 3306):
+        if ip not in sql_dict :
+            sql_dict.update({ip: 0})
+        else:
+            sql_dict[ip]+=1
+        sql_td = sql_tstamp2-sql_tstamp1
+        sql_td_sec = int(round(sql_td.total_seconds()))
+        if (sql_td_sec > 60):
+            sql_key_list = list(sql_dict.keys())
+            sql_val_list = list(sql_dict.values())
+            sql_limit = 100
+            for x in sql_val_list :
+                if (x > sql_limit): 
+                    sql_ip_position = sql_val_list.index(x)
+                    sql_ip = sql_key_list[sql_ip_position]
+                    LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = SQL BruteForce | IP = "+sql_ip+"\r\r\n")
+                    with open("/var/www/web_stats/csv_files/intrusions.csv", "a") as LOG_CSV:
+                        LOG_CSV.write((datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",SQL BruteForce,"+sql_ip+","+country).replace('\n', '')+"\n")
+                        LOG_CSV.flush()
+            sql__dict = {}
+            sql_tstamp1 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
