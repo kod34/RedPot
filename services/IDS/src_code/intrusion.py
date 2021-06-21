@@ -31,27 +31,27 @@ ssh_tstamp1 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fm
 port_list = [21, 22, 23, 25, 42, 53, 80, 88, 110, 119, 135, 137, 138, 138, 143, 443, 465, 993, 995, 1025, 3306]
 k2 = datetime.strptime(datetime.now().strftime("2018-06-06 15:15:15"), fmt)
 
-    #  Paid service
-    #  try:
-    #     url = 'http://ipinfo.io/'+ip+'/json'
-    #     response = urlopen(url)
-    #     data = json.load(response)
-    #     country = data['country']
-    # except:
-    #     country = 'local'
+#  Ipinfo sucks
+#  try:
+#     url = 'http://ipinfo.io/'+ip+'/json'
+#     response = urlopen(url)
+#     data = json.load(response)
+#     country = data['country']
+# except:
+#     country = 'local'
 
-#geolocation-db
-def location1(ip_add):
-    global country
-    ip_add = PacketStrings.attacker_ip
-    try: 
-        response = requests.get("https://geolocation-db.com/json/"+ip_add+"&position=true").json()
-        country = response['country_name']
-    except:
-        country = 'Error'
-    finally:
-        if(country == 'Not found'):
-            country = 'local'
+#geolocation-db sucks
+# def location1(ip_add):
+#     global country
+#     ip_add = PacketStrings.attacker_ip
+#     try: 
+#         response = requests.get("https://geolocation-db.com/json/"+ip_add+"&position=true").json()
+#         country = response['country_name']
+#     except:
+#         country = 'Error'
+#     finally:
+#         if(country == 'Not found'):
+#             country = 'local'
 
 
 #geo plugin (120 per minute)
@@ -86,6 +86,21 @@ def lease():
             	reset_on = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
             	lease_dates.write("\n"+str(reset_on))
 
+def get_country(ip):
+	global country
+	loc_read = open("/redpot/logs/IDS/locations.csv", "r")
+	found = False
+	for row in loc_read:
+	    if (ip == row.split(',')[0]):
+	        found = True
+	        country = row.split(',')[1]
+	        break
+	if(not found):
+	    location2(ip)
+	    loc_write = open("/redpot/logs/IDS/locations.csv", "a")
+	    loc_write.write(ip+","+country+"\n")
+	    loc_write.flush()
+
 def traffic():
     global country
     port = PacketStrings.target_port
@@ -94,28 +109,17 @@ def traffic():
         LOG_traffic.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Port "+str(port)+" is catching traffic from IP "+ip+"\r\r\n")
         LOG_traffic_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+str(port)+","+ip+"\n")
 
+
 def Port_scanner():
     global scan_dict
     global country
     port = PacketStrings.target_port
-    ip = PacketStrings.attacker_ip
+    ip_port = PacketStrings.attacker_ip
     if(port in port_list):
-        loc_read = open("/redpot/logs/IDS/locations.csv", "r")
-        found = False
-        for row in loc_read:
-            if (ip == row.split(',')[0]):
-                found = True
-                country = row.split(',')[1]
-                LOG_ports.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Port "+str(port)+" is targeted by IP "+ip+"\r\r\n")
-                LOG_ports_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+str(port)+","+ip+","+country)
-                break
-        if(not found):
-            location2(ip)
-            loc_write = open("/redpot/logs/IDS/locations.csv", "a")
-            loc_write.write(ip+","+country+"\n")
-            loc_write.flush()
-            LOG_ports.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Port "+str(port)+" is targeted by IP "+ip+"\r\r\n")
-            LOG_ports_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+str(port)+","+ip+","+country+"\n")
+        get_country(ip_port)
+        LOG_ports.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Port "+str(port)+" is targeted by IP "+ip_port+"\r\r\n")
+        LOG_ports_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+str(port)+","+ip_port+","+country)
+
 
 
 def SQLintrusion():
@@ -123,6 +127,7 @@ def SQLintrusion():
     global k2
     Port = PacketStrings.target_port
     ip_SQL = PacketStrings.attacker_ip
+    get_country(ip_SQL)
     sus = PacketStrings.tcp_payload
     k1 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
     diff = k1-k2
@@ -131,15 +136,15 @@ def SQLintrusion():
         for x in SQLinjections:
             if (urllib.parse.quote_plus(x) in sus):
                 k2 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
-                location1(ip_SQL)
                 LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = SQLinjection | IP = "+ip_SQL+" | Payload = "+str(x)+"\r\r\n")
-                LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",SQLinjection,"+ip_SQL+","+country+"\n")
+                LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",SQLinjection,"+ip_SQL+","+country)
                 break
 
 def XSSintrusion():
     global country
     global k2
     ip_XSS = PacketStrings.attacker_ip
+    get_country(ip_XSS)
     sus = PacketStrings.tcp_payload
     Port = PacketStrings.target_port
     k1 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
@@ -149,9 +154,8 @@ def XSSintrusion():
         for x in XSSinjections:
             if (urllib.parse.quote_plus(x) in sus):
                 k2 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
-                location1(ip_XSS)
                 LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = XSS | IP = "+ip_XSS+" | Payload = "+str(x)+"\r\r\n")
-                LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",XSS,"+ip_XSS+","+country+"\n")
+                LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",XSS,"+ip_XSS+","+country)
                 break
 
 
@@ -161,6 +165,7 @@ def SSH_Flood():
     global ssh_tstamp1
     ssh_tstamp2 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
     ip = PacketStrings.attacker_ip
+    get_country(ip)
     port = PacketStrings.target_port
     if(port == 22):
 	    if ip not in ssh_dict :
@@ -177,9 +182,8 @@ def SSH_Flood():
 	            if (x > ssh_limit): 
 	                ssh_ip_position = ssh_val_list.index(x)
 	                ssh_ip = ssh_key_list[ssh_ip_position]
-	                location1(ssh_ip)
 	                LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = SSH BruteForce | IP = "+ssh_ip+"\r\r\n")
-	                LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",SSH BruteForce,"+ssh_ip+","+country+"\n")
+	                LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",SSH BruteForce,"+ssh_ip+","+country)
 	        ssh__dict = {}
 	        ssh_tstamp1 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
 
@@ -189,6 +193,7 @@ def Flood():
     global tstamp1
     tstamp2 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
     ip = PacketStrings.attacker_ip
+    get_country(ip)
     port = PacketStrings.target_port
     if(port != 22):
         if ip not in ip_dict :
@@ -200,14 +205,13 @@ def Flood():
         if (td_sec > 60):
             key_list = list(ip_dict.keys())
             val_list = list(ip_dict.values())
-            threshold = 500
+            threshold = 400
             for x in val_list :
                 if (x > threshold):
                     ip_position = val_list.index(x)
                     dos_ip = key_list[ip_position]
-                    location1(dos_ip)
                     LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = Flood Attack | IP = "+dos_ip+"\r\r\n")
-                    LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",TCP/UDP Flood,"+dos_ip+","+country+"\n")
+                    LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",TCP/UDP Flood,"+dos_ip+","+country)
             ip_dict = {}
             tstamp1 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
         

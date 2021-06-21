@@ -90,7 +90,7 @@ class FakeSshServer(paramiko.ServerInterface):
         return paramiko.OPEN_FAILED_ADMINISTRATIVELY_PROHIBITED
 
     def check_auth_password(self, username, password):
-        if password == '123456789':
+        if password == '5enie7hdo3u3bi7':
         	LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"  Password "+password+" attempted"+"\r\n")
         	LOG.flush()
         	return paramiko.AUTH_SUCCESSFUL
@@ -117,14 +117,27 @@ def handle_connection(client, addr):
     LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"  [!] Connection from " + addr[0] + "\n")
     
     #ip_api (45 per minute)
-    try:
-        response = requests.get("http://ip-api.com/json/"+addr[0]).json()
-        country = response['country']
-    except:
-        country = 'local'
-    LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+addr[0]+","+country+"\n")
-    LOG_CSV.flush()
-
+    loc_read = open("/redpot/logs/IDS/locations.csv", "r")
+    found = False
+    for row in loc_read:
+        if (addr[0] == row.split(',')[0]):
+            found = True
+            country = row.split(',')[1]
+            LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+addr[0]+","+country)
+            LOG_CSV.flush()
+            break
+    if(not found):
+        try:
+            response = requests.get("http://ip-api.com/json/"+addr[0]).json()
+            country = response['country']
+        except:
+            country = 'local'
+        finally:
+            loc_write = open("/redpot/logs/IDS/locations.csv", "a")
+            loc_write.write(addr[0]+","+country+"\n")
+            loc_write.flush()
+            LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+addr[0]+","+country+"\n")
+            LOG_CSV.flush()
         
     try:
         transport = paramiko.Transport(client)
