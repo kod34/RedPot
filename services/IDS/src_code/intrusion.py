@@ -6,6 +6,7 @@ import urllib.parse
 from scapy.all import *
 import requests
 import os
+from netaddr import *
 # from urllib.request import urlopen
 
 LOG = open("/redpot/logs/IDS/intrusions.log", "a")
@@ -55,14 +56,17 @@ k2 = datetime.strptime(datetime.now().strftime("2018-06-06 15:15:15"), fmt)
 def location2(ip_add):
     global country
     ip_add = PacketStrings.attacker_ip
-    try:
-        response = requests.get("http://www.geoplugin.net/json.gp?ip="+ip_add).json()
-        country = response['geoplugin_countryName']
-    except:
-        country = 'Error'
-    finally:
-        if(country == None):
-            country = 'local'
+    if (IPAddress(ip_add).is_private()):
+        country = 'local'
+    else:
+        try:
+            response = requests.get("http://www.geoplugin.net/json.gp?ip="+ip_add).json()
+            country = response['geoplugin_countryName']
+        except:
+            country = 'Error'
+        finally:
+            if(country == None):
+                country = 'local'
 
 def lease():
     global scan_dict
@@ -99,13 +103,12 @@ def get_country(ip):
         loc_write.flush()
 
 def traffic():
-    global country
     port = PacketStrings.target_port
     ip = PacketStrings.attacker_ip
-    if(port != ''):
+    if(port != '' and not IPAddress(ip).is_private()):
         LOG_traffic.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Port "+str(port)+" is catching traffic from IP "+ip+"\r\r\n")
         with open("/var/www/web_stats/csv_files/traffic.csv", "a") as LOG_traffic_CSV:
-            LOG_traffic_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+str(port)+","+ip)
+            LOG_traffic_CSV.write((datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+str(port)+","+ip).replace('\n', '')+"\n")
             LOG_traffic_CSV.flush()
 
 
@@ -139,7 +142,7 @@ def SQLintrusion():
                 k2 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
                 LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = SQLinjection | IP = "+ip_SQL+" | Payload = "+str(x)+"\r\r\n")
                 with open("/var/www/web_stats/csv_files/intrusions.csv", "a") as LOG_CSV:
-                    LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",SQLinjection,"+ip_SQL+","+country)
+                    LOG_CSV.write((datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",SQLinjection,"+ip_SQL+","+country).replace('\n', '')+"\n")
                     LOG_CSV.flush()
                 break
 
@@ -159,7 +162,7 @@ def XSSintrusion():
                 k2 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
                 LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = XSS | IP = "+ip_XSS+" | Payload = "+str(x)+"\r\r\n")
                 with open("/var/www/web_stats/csv_files/intrusions.csv", "a") as LOG_CSV:
-                    LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",XSS,"+ip_XSS+","+country)
+                    LOG_CSV.write((datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",XSS,"+ip_XSS+","+country).replace('\n', '')+"\n")
                     LOG_CSV.flush()
                 break
 
@@ -189,7 +192,7 @@ def SSH_Flood():
                     ssh_ip = ssh_key_list[ssh_ip_position]
                     LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = SSH BruteForce | IP = "+ssh_ip+"\r\r\n")
                     with open("/var/www/web_stats/csv_files/intrusions.csv", "a") as LOG_CSV:
-                        LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",SSH BruteForce,"+ssh_ip+","+country)
+                        LOG_CSV.write((datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",SSH BruteForce,"+ssh_ip+","+country).replace('\n', '')+"\n")
                         LOG_CSV.flush()
             ssh__dict = {}
             ssh_tstamp1 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
@@ -219,7 +222,7 @@ def Flood():
                     dos_ip = key_list[ip_position]
                     LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = Flood Attack | IP = "+dos_ip+"\r\r\n")
                     with open("/var/www/web_stats/csv_files/intrusions.csv", "a") as LOG_CSV:
-                        LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",TCP/UDP Flood,"+dos_ip+","+country)
+                        LOG_CSV.write((datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",TCP/UDP Flood,"+dos_ip+","+country).replace('\n', '')+"\n")
                         LOG_CSV.flush()
             ip_dict = {}
             tstamp1 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)

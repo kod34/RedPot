@@ -1,3 +1,4 @@
 paramiko
 faker
 scapy
+netaddr
