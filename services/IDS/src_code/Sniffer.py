@@ -46,10 +46,7 @@ class Sniffer(Thread):
 
         #flush log files
         LOG.flush()
-        LOG_CSV.flush()
-        LOG_ports_CSV.flush()
         LOG_ports.flush()
-        LOG_traffic_CSV.flush()
         LOG_traffic.flush()
         lease_dates.flush()
 
