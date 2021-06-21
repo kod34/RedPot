@@ -253,9 +253,9 @@ def SQL_Flood():
                 if (x > sql_limit): 
                     sql_ip_position = sql_val_list.index(x)
                     sql_ip = sql_key_list[sql_ip_position]
-                    LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = SQL BruteForce | IP = "+sql_ip+"\r\r\n")
+                    LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" | Possible Intrusion Detected | Type = MYSQL BruteForce | IP = "+sql_ip+"\r\r\n")
                     with open("/var/www/web_stats/csv_files/intrusions.csv", "a") as LOG_CSV:
-                        LOG_CSV.write((datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",SQL BruteForce,"+sql_ip+","+country).replace('\n', '')+"\n")
+                        LOG_CSV.write((datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+",MYSQL BruteForce,"+sql_ip+","+country).replace('\n', '')+"\n")
                         LOG_CSV.flush()
             sql__dict = {}
             sql_tstamp1 = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fmt)
