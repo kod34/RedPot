@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Ports</title>
+		<title>Traffic</title>
 
 		<!-- Load c3.css -->
 		<link href="stylesheets/c3.css" rel="stylesheet" type="text/css">

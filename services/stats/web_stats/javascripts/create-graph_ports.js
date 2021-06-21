@@ -37,7 +37,7 @@ function createGraph(data) {
 	var Arr=[];
 	var Att= [];
 	var Arrx = ['x'];
-	var Arry = ['Traffic'];
+	var Arry = ['Frequency'];
 
 	for (var i = 0; i < data.length-1; i++) {
 		if (ports.indexOf(data[i][2]) !== -1 && data[i][4] !== 'local' && data[i][4] !== 'Error'){

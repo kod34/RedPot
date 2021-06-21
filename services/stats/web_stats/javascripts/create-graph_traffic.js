@@ -29,7 +29,7 @@ function foo(arr) {
 function createGraph(data) {
 
 	var Arrx = ['x'];
-	var Arry = ['Attacks'];
+	var Arry = ['Frequency'];
 	var dates = [];
 
 	for (var i = 0; i < data.length-1; i++) {
