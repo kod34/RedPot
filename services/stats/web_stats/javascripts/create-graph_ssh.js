@@ -49,13 +49,17 @@ function createGraph(data) {
 	}
 
 	var chart = c3.generate({
+	    size: {
+        height: 480,
+        width: 480
+    	},
 	    data: {
-	        columns: Arr,
-	        type : 'pie',
-	        onclick: function (d, i) { console.log("onclick", d, i); },
-	        onmouseover: function (d, i) { console.log("onmouseover", d, i); },
-	        onmouseout: function (d, i) { console.log("onmouseout", d, i); }
-	    }
+		        columns: Arr,
+		        type : 'pie',
+		        onclick: function (d, i) { console.log("onclick", d, i); },
+		        onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+		        onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+		    }
 	});
 
 	var result = foo(dates);	

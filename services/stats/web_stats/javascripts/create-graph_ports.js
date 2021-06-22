@@ -54,6 +54,10 @@ function createGraph(data) {
 	}
 
 	var chart = c3.generate({
+		size: {
+        height: 480,
+        width: 480
+    },
 	    data: {
 	        columns: Arr,
 	        type : 'pie',
@@ -72,6 +76,10 @@ function createGraph(data) {
 	}
 
 	var chart = c3.generate({
+		size: {
+        height: 400,
+        width: 1050
+    },
 		data: {
 			columns: Att,
             type: 'bar',

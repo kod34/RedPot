@@ -53,7 +53,7 @@
     		</div>
 			<br><br>
 			<div id="title">
-			<div id="chart" class="pie"></div>
+			<div id="chart" class="pie" style="margin-left: 40%;" ></div>
 			<div style="margin-left: 48%;">Sources of Attack</div>
 		</div>
 

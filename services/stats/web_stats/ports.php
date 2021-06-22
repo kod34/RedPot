@@ -49,10 +49,10 @@
     	<br>
     	<div class="port" >
     	<div id="chart"></div>
-    	<div>Ports Frequency</div>
+    	<div style="margin-left: 48%;" class = "">Ports Frequency</div>
     	<br>
-    	<div id="chart2"></div>
-    	<div>Port Traffic Location</div>
+    	<div id="chart2" style="margin-left: 40%;"></div>
+    	<div style="margin-left: 48%;">Port Traffic Location</div>
 		</div>
     	</div>
 

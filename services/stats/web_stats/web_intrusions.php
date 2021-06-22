@@ -49,12 +49,12 @@
 		</div>
 			<br><br>
 		<div id="title">
-			<div id="chart" class="pie_int"></div>
+			<div id="chart" style="margin-left: 40%;" class="pie_int"></div>
 			<div style="margin-left: 48%;">Sources of Attack</div>
 		</div>
 			<br><br>
 		<div id="title">
-			<div id="chart3" class="lol"></div>
+			<div id="chart3" class=""></div>
 			<div style="margin-left: 48%;">Types of Attacks</div>
 		</div>
 			<br><br>

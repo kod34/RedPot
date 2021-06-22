@@ -52,7 +52,11 @@ function createGraph(data) {
 	}
 
 	var chart = c3.generate({
-	    data: {
+	    size: {
+        height: 480,
+        width: 480
+    	},
+    	data: {
 	        columns: Arr,
 	        type : 'pie',
 	        onclick: function (d, i) { console.log("onclick", d, i); },
@@ -104,13 +108,19 @@ function createGraph(data) {
 	}
 
 
-	var chart = c3.generate({
+	var chart_bar = c3.generate({
+		size: {
+	        height: 400,
+	        width: 1050
+	    },
 		data: {
 			columns: Att,
             type: 'bar',
         },
         bar: {
-        	space: 0.25,
+        	width: {
+            	ratio: 0.25 // this makes bar width 50% of length between ticks
+            },
         },
         axis: {
         	x: {
