@@ -61,6 +61,9 @@ function createGraph(data) {
 	    data: {
 	        columns: Arr,
 	        type : 'pie',
+	        pie: {
+				expand: false
+			},
 	        onclick: function (d, i) { console.log("onclick", d, i); },
 	        onmouseover: function (d, i) { console.log("onmouseover", d, i); },
 	        onmouseout: function (d, i) { console.log("onmouseout", d, i); }
