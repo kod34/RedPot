@@ -40,7 +40,7 @@ function createGraph(data) {
 	var Arry = ['Frequency'];
 
 	for (var i = 0; i < data.length-1; i++) {
-		if (ports.indexOf(data[i][2]) !== -1 && data[i][4] !== 'local' && data[i][4] !== 'Error'){
+		if (ports.indexOf(data[i][2]) !== -1 && data[i][4] !== 'local' && data[i][4] !== 'Error' && moment(data[i][0], "DD-MM-YYYY", true).isValid()){
 			ttacks.push(data[i][2]);
 			ips.push(data[i][4]);
 			dates.push(data[i][0]);

@@ -33,7 +33,9 @@ function createGraph(data) {
 	var dates = [];
 
 	for (var i = 0; i < data.length-1; i++) {
-		dates.push(data[i][0]);
+		if(moment(data[i][0], "DD-MM-YYYY", true).isValid()){
+			dates.push(data[i][0]);
+		}
 	}
 
 	var result = foo(dates);	

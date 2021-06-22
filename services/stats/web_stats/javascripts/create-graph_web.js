@@ -37,7 +37,7 @@ function createGraph(data) {
 	var Arr=[];
 
 	for (var i = 0; i < data.length-1; i++) {
-		if (data[i][4] !== 'Error'){
+		if (data[i][4] !== 'Error' && moment(data[i][0], "DD-MM-YYYY", true).isValid()){
 			ips.push(data[i][4]);
 			dates.push(data[i][0]);
 			ttacks.push(data[i][2]);
