@@ -47,13 +47,13 @@
 		<div id="title">
     	<div style="margin-left: 48%;">Ports Traffic</div>
     	<br>
-    	<div class="port" >
     	<div id="chart"></div>
-    	<div style="margin-left: 48%;" class = "">Ports Frequency</div>
+    	<div class="port" >
+    	<div style="margin-left: 38%;" class="">Ports Frequency</div>
     	<br>
-    	<div id="chart2" style="margin-left: 40%;"></div>
-    	<div style="margin-left: 48%;">Port Traffic Location</div>
 		</div>
+		<div id="chart2" style="margin-left: 40%;"></div>
+    	<div style="margin-left: 48%;">Port Traffic Location</div>
     	</div>
 
     	
