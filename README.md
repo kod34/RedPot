@@ -2,24 +2,23 @@
 
 # Description
 
-This is an early stage multi-service honeypot designed to be setup on a virtual machine.
+A Web + SSH + MySQL HoneyPot designed to be setup and run on a virtual machine.
 
-# !!WARNING!!  
-# INSTALL ON VIRTUAL MACHINE!
-# DO NOT INSTALL ON YOUR LOCAL MACHINE! YOUR DATA MAY BE LOST!
+# Warning
+
+Installing this on your personal machine might lead you to lose your data.
 
 # Installation 
 
-chmod +x install  
-sudo ./install  
-sudo pip3 install -r requirements.txt  
+chmod +x install.sh  
+sudo ./install.sh
 
 # Setup environment
 
-chmod +x setup  
-sudo ./setup
+chmod +x setup.sh  
+sudo ./setup.sh
 
 # Run Redpot
 
-chmod +x redpot  
+chmod +x redpot.sh  
 sudo ./redpot

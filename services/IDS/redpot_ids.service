@@ -1,0 +1,11 @@
+[Unit]
+Description=Network-based Intrusion Detection System
+
+[Service]
+Type=simple
+WorkingDirectory=/root
+ExecStart=/usr/bin/python3 /redpot/IDS/src_code/redpot.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

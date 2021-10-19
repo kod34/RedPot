@@ -5,27 +5,27 @@ if [[ $EUID -ne 0 ]];then
         exit 1
 fi
 echo -------------------------------------------------------------------
-echo ‎‎‎‎‎‎‎‎‎‎'                       'UPDATING PACKAGES
+echo ‎‎‎‎‎‎‎‎‎‎'                       'Updating Packages
 echo -------------------------------------------------------------------
 apt update
 echo -------------------------------------------------------------------
-echo ‎‎‎‎'                      'INSTALLING PYTHON3
+echo ‎‎‎‎'                      'Installing Python3
 echo -------------------------------------------------------------------
-apt --assume-yes install python3
+apt -y install python3
 echo -------------------------------------------------------------------
-echo ‎‎‎‎'                         'INSTALLING PIP
+echo ‎‎‎‎'                        'Installing pip3
 echo -------------------------------------------------------------------
-apt --assume-yes install python3-pip
+apt -y install python3-pip
 echo -------------------------------------------------------------------
-echo ‎‎‎‎'                       'INSTALLING APACHE
+echo ‎‎‎‎'                       'Installing Apache
 echo -------------------------------------------------------------------
-apt --assume-yes install apache2
-apt --assume-yes install php php-cli php-fpm php-json php-common php-mysql php-zip php-gd php-mbstring php-curl php-xml php-pear php-bcmath
+apt -y install apache2
+apt -y install php php-cli php-fpm php-json php-common php-mysql php-zip php-gd php-mbstring php-curl php-xml php-pear php-bcmath
 echo -------------------------------------------------------------------
-echo ‎‎‎‎'                        'INSTALLING MYSQL
+echo ‎‎‎‎'                 'Installing MySQL and Dependencies
 echo -------------------------------------------------------------------
-apt --assume-yes install mysql-server
-echo [+] Installing required python modules...
+apt install mysql-server -y
+echo [+] Installing required Python packages...
 sleep 1
 python3 -m pip install mysql-connector-python
 pip3 install -r requirements.txt

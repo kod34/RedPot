@@ -8,9 +8,12 @@ import traceback
 import paramiko
 import time
 from datetime import datetime
+import requests
+# from urllib.request import urlopen
 
 
-LOG = open("/redpot/logs/fakessh_log.txt", "a")
+LOG = open("/redpot/logs/SSH/fakessh.log", "a")
+LOG_CSV = open("/var/www/web_stats/csv_files/fakessh.csv", "a")
 HOST_KEY = paramiko.RSAKey(filename='/redpot/ssh/keys/private.key')
 SSH_BANNER = "SSH-2.0-OpenSSH_8.2p1 Ubuntu-4ubuntu0.1"
 
@@ -87,7 +90,7 @@ class FakeSshServer(paramiko.ServerInterface):
         return paramiko.OPEN_FAILED_ADMINISTRATIVELY_PROHIBITED
 
     def check_auth_password(self, username, password):
-        if password == '123456789':
+        if password == '5enie7hdo3u3bi7':
         	LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"  Password "+password+" attempted"+"\r\n")
         	LOG.flush()
         	return paramiko.AUTH_SUCCESSFUL
@@ -110,7 +113,32 @@ class FakeSshServer(paramiko.ServerInterface):
 
 def handle_connection(client, addr):
     """Handle a new ssh connection"""
-    LOG.write("\n"+datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"  [!] Connection from: " + addr[0] + "\n")
+
+    LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"  [!] Connection from " + addr[0] + "\n")
+    
+    #ip_api (45 per minute)
+    loc_read = open("/redpot/logs/IDS/locations.csv", "r")
+    found = False
+    for row in loc_read:
+        if (addr[0] == row.split(',')[0]):
+            found = True
+            country = row.split(',')[1]
+            LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+addr[0]+","+country)
+            LOG_CSV.flush()
+            break
+    if(not found):
+        try:
+            response = requests.get("http://ip-api.com/json/"+addr[0]).json()
+            country = response['country']
+        except:
+            country = 'local'
+        finally:
+            loc_write = open("/redpot/logs/IDS/locations.csv", "a")
+            loc_write.write(addr[0]+","+country+"\n")
+            loc_write.flush()
+            LOG_CSV.write(datetime.now().strftime("%d-%m-%Y,%H:%M:%S")+","+addr[0]+","+country+"\n")
+            LOG_CSV.flush()
+        
     try:
         transport = paramiko.Transport(client)
         transport.add_server_key(HOST_KEY)
@@ -145,7 +173,7 @@ def handle_connection(client, addr):
                 chan.send("\r\n")
                 command = command.rstrip()
                 if command == "exit":
-                    LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"  Connection from: " + addr[0] + " closed.\n")
+                    LOG.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"  Connection from " + addr[0] + " closed.\n")
                     LOG.flush()
                     run = False
                 else:
