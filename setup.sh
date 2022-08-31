@@ -185,6 +185,9 @@ case $continue in
 	echo -------------------------------------------------------------------
 	echo ‎‎‎‎‎‎‎‎‎‎'                   'Configuring the MySql database
 	echo -------------------------------------------------------------------
+	echo [+] Starting MySQL service...
+	sleep 1
+	systemctl start mysql
 	echo [+] Creating user "'"'admin'"'"...
 	# To avoid errors
 	sudo mysql --execute="DROP USER IF EXISTS admin;CREATE USER 'admin'@'%' IDENTIFIED BY 'admin';GRANT SELECT ON *.* TO 'admin'@'%';"
