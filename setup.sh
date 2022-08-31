@@ -199,6 +199,8 @@ case $continue in
 	systemctl restart mysql.service
 	echo [+] Populating MySQL Database...
 	python3 services/mysql/mysql_junk.py
+	echo [+] Stoping MySQL service...
+	systemctl stop mysql.service
 	echo [+] Done
 	echo -------------------------------------------------------------------
 	echo ‎‎‎‎‎‎‎‎‎‎'                      'Configuring the IDS
@@ -230,8 +232,6 @@ case $continue in
 	mkdir -p /var/www/web_stats/csv_files
 	a2ensite web_stats.conf
 	sleep 1
-	echo [+] Starting the Apache server...
-	systemctl restart apache2
 	echo [+] Done
 	echo [*] You can view real-time intrusion statistics at: http://localhost:5001
 	;;
