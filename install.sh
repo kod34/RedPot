@@ -29,4 +29,5 @@ echo [+] Installing required Python packages...
 sleep 1
 python3 -m pip install mysql-connector-python
 pip3 install -r requirements.txt
+apt install unzip
 echo [+] Done
